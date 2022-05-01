@@ -33,6 +33,7 @@ A synchronization system to reliably transfer data between two separate data sto
 - [Polly](https://github.com/App-vNext/Polly)
 - [NLog](https://nlog-project.org)
 - [RabbitMQ](https://www.rabbitmq.com)
+- [NServiceBus](https://particular.net/nservicebus)
 - [Kibana](https://www.elastic.co/kibana/)
 
 ## References
