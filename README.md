@@ -8,7 +8,7 @@ A synchronization system to reliably transfer data between two separate data sto
 - Data being transfered in batches
 - Data availability during transfer
 - Data Consistency
-- Data mapping
+- Data mapping is a long-running process
 - Timestamp which indicates data change is not available
 - Transfer only data that changed to decrease batch size during import
 - Handle network timeouts
@@ -26,15 +26,55 @@ A synchronization system to reliably transfer data between two separate data sto
 - Queue-Based Load Leveling
 - Telemetry
 
+## Workflow overview
+```mermaid
+    flowchart TD;
+        HostDB[(Host DB)]
+        TargetDB[(Target DB)]
+        ImportScheduledJobs[Import Scheduled Jobs]
+        PublishingConsumer[Publishing Consumer]
+        CleanUpScheduledJobs[Clean-up Scheduled Jobs]
+        EventHandlers[Event Handlers]
+        MessageMappers[Message Mappers]
+
+        subgraph Publishing
+            Queue -- Consume --> PublishingConsumer -- ACK --> Queue
+        end
+
+        CleanUpScheduledJobs --> HostDB
+        CleanUpScheduledJobs --> TargetDB & MessageMappers
+
+        HostDB --> EventHandlers
+        EventHandlers & ImportScheduledJobs --> MessageMappers
+
+        ImportScheduledJobs --> HostDB
+        MessageMappers --> Queue
+        
+        PublishingConsumer --> TargetDB
+```
+
 ## Tech stack
 - [.NET](https://dotnet.microsoft.com/en-us/download)
-- [Docker](https://www.docker.com)
-- [MS SQL](https://hub.docker.com/_/microsoft-mssql-server)
+- [NServiceBus](https://particular.net/nservicebus)
 - [Polly](https://github.com/App-vNext/Polly)
 - [NLog](https://nlog-project.org)
+- [Docker](https://www.docker.com)
+- [MS SQL](https://hub.docker.com/_/microsoft-mssql-server)
+- [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/)
+- [Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/)
 - [RabbitMQ](https://www.rabbitmq.com)
-- [NServiceBus](https://particular.net/nservicebus)
 - [Kibana](https://www.elastic.co/kibana/)
+
+## How to run
+Run `setup.sh` to create `.env`:
+```
+sh setup.sh
+```
+
+Create containers:
+```
+docker compose up
+```
 
 ## References
 - [Data Consistency Primer](https://docs.microsoft.com/en-us/previous-versions/msp-n-p/dn589800(v=pandp.10))
