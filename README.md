@@ -60,6 +60,7 @@ A synchronization system to reliably transfer data between two separate data sto
 - [NLog](https://nlog-project.org)
 - [Docker](https://www.docker.com)
 - [MS SQL](https://hub.docker.com/_/microsoft-mssql-server)
+- [Redis](https://redis.com)
 - [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/)
 - [Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/)
 - [RabbitMQ](https://www.rabbitmq.com)
