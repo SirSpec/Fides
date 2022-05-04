@@ -48,15 +48,13 @@ services:
             - elasticsearch
 
     sqlpad:
-        # To use Dockerfile at root of this project, use build instead of image
-        # build: ../../
         image: sqlpad/sqlpad:latest
         hostname: 'sqlpad'
         ports:
             - '3000:3000'
         environment:
-            SQLPAD_ADMIN: 'admin@sqlpad.com'
-            SQLPAD_ADMIN_PASSWORD: 'admin'
+            SQLPAD_ADMIN: $SQLPAD_ADMIN
+            SQLPAD_ADMIN_PASSWORD: $SQLPAD_ADMIN_PASSWORD
             SQLPAD_APP_LOG_LEVEL: info
             SQLPAD_WEB_LOG_LEVEL: warn
             SQLPAD_CONNECTIONS__sqlserverdemo__name: SQL Server Demo
