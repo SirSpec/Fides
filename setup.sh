@@ -6,8 +6,7 @@ AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=$(ifconfig | grep "inet " | grep -Fv 1
 EOF
 echo "$(cat .env)"
 
-echo Create secrets:
-mkdir -p ./secrets
+echo Create .env variables:
 read -p 'Set MsSql SA password: ' mssql_sa_password
 printf "%s\n" "MSSQL_SA_PASSWORD=$mssql_sa_password" >> .env
 
