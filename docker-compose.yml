@@ -1,0 +1,78 @@
+services:
+    sql:
+        image: "mcr.microsoft.com/azure-sql-edge:latest"
+        hostname: 'sql'
+        ports:
+            - "1433:1433"
+        environment:
+            MSSQL_SA_PASSWORD: $MSSQL_SA_PASSWORD
+            ACCEPT_EULA: 1
+
+    redis:
+        image: "redis/redis-stack:latest"
+        ports:
+            - "6379:6379"
+            - "8001:8001"
+
+    rabbitmq:
+        image: "rabbitmq:management"
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        environment:
+            RABBITMQ_DEFAULT_USER: $RABBITMQ_DEFAULT_USER
+            RABBITMQ_DEFAULT_PASS: $RABBITMQ_DEFAULT_PASS
+
+    elasticsearch:
+        container_name: elasticsearch
+        image: "elasticsearch:8.1.3"
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        networks:
+            - elastic
+        environment:
+            xpack.security.enabled: false
+            discovery.type: "single-node"
+
+    kibana:
+        container_name: kibana
+        image: "kibana:8.1.3"
+        ports:
+            - "5601:5601"
+        environment:
+            ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+        networks:
+            - elastic
+        depends_on:
+            - elasticsearch
+
+    sqlpad:
+        # To use Dockerfile at root of this project, use build instead of image
+        # build: ../../
+        image: sqlpad/sqlpad:latest
+        hostname: 'sqlpad'
+        ports:
+            - '3000:3000'
+        environment:
+            SQLPAD_ADMIN: 'admin@sqlpad.com'
+            SQLPAD_ADMIN_PASSWORD: 'admin'
+            SQLPAD_APP_LOG_LEVEL: info
+            SQLPAD_WEB_LOG_LEVEL: warn
+            SQLPAD_CONNECTIONS__sqlserverdemo__name: SQL Server Demo
+            SQLPAD_CONNECTIONS__sqlserverdemo__driver: sqlserver
+            SQLPAD_CONNECTIONS__sqlserverdemo__host: sql
+            SQLPAD_CONNECTIONS__sqlserverdemo__database: master
+            SQLPAD_CONNECTIONS__sqlserverdemo__username: sa
+            SQLPAD_CONNECTIONS__sqlserverdemo__password: $MSSQL_SA_PASSWORD
+        volumes:
+            - sqlpad-volume:/var/lib/sqlpad
+        depends_on:
+            - sql
+
+volumes:
+  sqlpad-volume:
+
+networks:
+    elastic:
+        driver: bridge
