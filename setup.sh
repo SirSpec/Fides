@@ -6,7 +6,8 @@ AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=$(ifconfig | grep "inet " | grep -Fv 1
 EOF
 echo "$(cat .env)"
 
-echo Create .env variables:
+echo Create .env variables
+
 read -p 'Set MsSql SA password: ' mssql_sa_password
 printf "%s\n" "MSSQL_SA_PASSWORD=$mssql_sa_password" >> .env
 
@@ -15,3 +16,9 @@ printf "%s\n" "RABBITMQ_DEFAULT_USER=$rabbitmq_default_user" >> .env
 
 read -p 'RabbitMQ default password: ' rabbitmq_default_password
 printf "%s\n" "RABBITMQ_DEFAULT_PASS=$rabbitmq_default_password" >> .env
+
+read -p 'SqlPad admin user: ' sqlpad_admin
+printf "%s\n" "SQLPAD_ADMIN=$sqlpad_admin" >> .env
+
+read -p 'SqlPad admin password: ' sqlpad_admin_password
+printf "%s\n" "SQLPAD_ADMIN_PASSWORD=$sqlpad_admin_password" >> .env
