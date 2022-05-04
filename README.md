@@ -78,6 +78,7 @@ docker compose up
 ```
 
 ## References
+- [Scheduler Agent Supervisor](https://docs.microsoft.com/en-us/azure/architecture/patterns/scheduler-agent-supervisor)
 - [Data Consistency Primer](https://docs.microsoft.com/en-us/previous-versions/msp-n-p/dn589800(v=pandp.10))
 - [Queue-Based Load Leveling](https://docs.microsoft.com/en-us/azure/architecture/patterns/queue-based-load-leveling)
 - [Retry](https://docs.microsoft.com/en-us/azure/architecture/patterns/retry)
