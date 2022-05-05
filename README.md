@@ -3,7 +3,7 @@ A synchronization system to reliably transfer data between two separate data sto
 
 ## Use case and requirements
 - Two separate service that store different data structures
-- Both services provide only an API to QUERY, CREATE, UPDATE, DELETE data
+- Both services provide an API to QUERY, CREATE, UPDATE, DELETE data
 - Host storage sends events such as: CREATE, UPDATE, DELETE
 - Data being transfered in batches
 - Data availability during transfer
@@ -64,7 +64,7 @@ A synchronization system to reliably transfer data between two separate data sto
 - [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/)
 - [Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/)
 - [RabbitMQ](https://www.rabbitmq.com)
-- [Kibana](https://www.elastic.co/kibana/)
+- [ELK](https://www.elastic.co/what-is/elk-stack)
 
 ## How to run
 Run `setup.sh` to create `.env`:
