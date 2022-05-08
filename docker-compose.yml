@@ -2,6 +2,7 @@ services:
     sql:
         container_name: sql
         image: "mcr.microsoft.com/azure-sql-edge:latest"
+        restart: on-failure[:3]
         hostname: 'sql'
         ports:
             - "1433:1433"
@@ -12,6 +13,7 @@ services:
     rabbitmq:
         container_name: rabbitmq
         image: "rabbitmq:management"
+        restart: on-failure[:3]
         ports:
             - "15672:15672"
             - "5672:5672"
@@ -22,6 +24,7 @@ services:
     elasticsearch:
         container_name: elasticsearch
         image: "elasticsearch:${ELASTIC_VERSION}"
+        restart: on-failure[:3]
         volumes:
             - ./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
             - elasticsearch:/usr/share/elasticsearch/data:z
@@ -37,7 +40,7 @@ services:
     logstash:
         container_name: logstash
         image: "logstash:${ELASTIC_VERSION}"
-        restart: always
+        restart: on-failure[:3]
         volumes:
             - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
             - ./elk/logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
@@ -57,6 +60,7 @@ services:
     kibana:
         container_name: kibana
         image: "kibana:${ELASTIC_VERSION}"
+        restart: on-failure[:3]
         volumes:
             - ./elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
         ports:
@@ -71,6 +75,7 @@ services:
     sqlpad:
         container_name: sqlpad
         image: sqlpad/sqlpad:latest
+        restart: on-failure[:3]
         hostname: 'sqlpad'
         ports:
             - '3000:3000'
