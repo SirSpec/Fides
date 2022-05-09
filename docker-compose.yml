@@ -84,7 +84,7 @@ services:
             SQLPAD_ADMIN_PASSWORD: $SQLPAD_ADMIN_PASSWORD
             SQLPAD_APP_LOG_LEVEL: info
             SQLPAD_WEB_LOG_LEVEL: warn
-            SQLPAD_CONNECTIONS__sqlserverdemo__name: SQL Server Demo
+            SQLPAD_CONNECTIONS__sqlserverdemo__name: SQL Server Fides
             SQLPAD_CONNECTIONS__sqlserverdemo__driver: sqlserver
             SQLPAD_CONNECTIONS__sqlserverdemo__host: sql
             SQLPAD_CONNECTIONS__sqlserverdemo__database: master
