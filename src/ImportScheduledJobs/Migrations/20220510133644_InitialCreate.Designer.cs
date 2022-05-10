@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ImportScheduledJobs.Migrations
 {
     [DbContext(typeof(StoresDbContext))]
-    [Migration("20220509190644_InitialCreate")]
+    [Migration("20220510133644_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -11,14 +11,8 @@ public class Order
     [ForeignKey("CustomerId")]
     public Customer? Customer { get; set; }
     public int? CustomerId { get; set; }
-
-    [Required]
     public OrderStatus OrderStatus { get; set; }
-
-    [Required]
     public DateTime OrderDate { get; set; }
-
-    [Required]
     public DateTime RequiredDate { get; set; }
     public DateTime? ShippedDate { get; set; }
 

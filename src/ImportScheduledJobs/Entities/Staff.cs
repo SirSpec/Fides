@@ -8,28 +8,21 @@ public class Staff
     [Key]
     public int StaffId { get; set; }
 
-    [Required]
     [MaxLength(50)]
     public string FirstName { get; set; }
 
-    [Required]
     [MaxLength(50)]
     public string LastName { get; set; }
 
-    [Required]
     [MaxLength(255)]
     public string Email { get; set; }
 
     [MaxLength(25)]
     public string? Phone { get; set; }
-
-    [Required]
     public int Active { get; set; }
 
     [ForeignKey("StoreId")]
     public Store Store { get; set; } = null!;
-
-    [Required]
     public int StoreId { get; set; }
 
     [ForeignKey("ManagerId")]
