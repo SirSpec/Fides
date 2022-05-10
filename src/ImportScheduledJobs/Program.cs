@@ -9,8 +9,15 @@ IHost host = Host.CreateDefaultBuilder(args)
         serviceCollection.AddMassTransitEndpoints(hostBuilderContext.Configuration);
         serviceCollection.AddElasticClient(hostBuilderContext.Configuration);
         serviceCollection.AddDbContext<StoresDbContext>(options =>
+        {
+            if (hostBuilderContext.HostingEnvironment.IsDevelopment())
+                options
+                    .EnableDetailedErrors()
+                    .EnableSensitiveDataLogging();
+
             options.UseSqlServer(
-                hostBuilderContext.Configuration.GetConnectionString("StoresDbContext")));
+                hostBuilderContext.Configuration.GetConnectionString("StoresDbContext"));
+        });
 
         serviceCollection.AddHostedService<Worker>();
     })

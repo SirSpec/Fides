@@ -24,11 +24,9 @@ public class Order
 
     [ForeignKey("StoreId")]
     public Store Store { get; set; } = null!;
-
     public int StoreId { get; set; }
 
     [ForeignKey("StaffId")]
     public Staff Staff { get; set; } = null!;
-
     public int StaffId { get; set; }
 }

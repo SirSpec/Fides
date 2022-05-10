@@ -11,22 +11,21 @@ public class StoresDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .Entity<Order>()
+        modelBuilder.Entity<Order>()
             .Property(entity => entity.OrderStatus)
             .HasConversion<int>();
 
-        modelBuilder
-            .Entity<Order>()
-            .HasOne(entity => entity.Staff)
-            .WithOne()
-            .HasForeignKey<Order>(entity => entity.StaffId)
-            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity
+                .HasOne(entity => entity.Staff)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
 
-        modelBuilder
-            .Entity<Order>()
-            .HasIndex(entity => entity.StaffId)
-            .IsUnique(false);
+            entity
+                .HasIndex(entity => entity.StaffId)
+                .IsUnique(false);
+        });
 
         modelBuilder
             .Entity<Stock>()
@@ -36,21 +35,21 @@ public class StoresDbContext : DbContext
             .Entity<OrderItem>()
             .HasKey(entity => new { entity.OrderId, entity.ItemId });
 
-        modelBuilder
-            .Entity<Staff>()
-            .HasIndex(entity => entity.Email)
-            .IsUnique();
+        modelBuilder.Entity<Staff>(entity =>
+        {
+            entity
+                .HasIndex(entity => entity.Email)
+                .IsUnique();
 
-        modelBuilder
-            .Entity<Staff>()
-            .HasOne(entity => entity.Manager)
-            .WithOne()
-            .OnDelete(DeleteBehavior.NoAction);
+            entity
+                .HasIndex(entity => entity.ManagerId)
+                .IsUnique(false);
 
-        modelBuilder
-            .Entity<Staff>()
-            .HasIndex(entity => entity.ManagerId)
-            .IsUnique(false);
+            entity
+                .HasOne(entity => entity.Manager)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+        });
     }
 
     public DbSet<Brand> Brands => Set<Brand>();

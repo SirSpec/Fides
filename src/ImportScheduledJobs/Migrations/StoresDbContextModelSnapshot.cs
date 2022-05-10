@@ -325,8 +325,8 @@ namespace ImportScheduledJobs.Migrations
                         .HasForeignKey("CustomerId");
 
                     b.HasOne("ImportScheduledJobs.Entities.Staff", "Staff")
-                        .WithOne()
-                        .HasForeignKey("ImportScheduledJobs.Entities.Order", "StaffId")
+                        .WithMany()
+                        .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -384,8 +384,8 @@ namespace ImportScheduledJobs.Migrations
             modelBuilder.Entity("ImportScheduledJobs.Entities.Staff", b =>
                 {
                     b.HasOne("ImportScheduledJobs.Entities.Staff", "Manager")
-                        .WithOne()
-                        .HasForeignKey("ImportScheduledJobs.Entities.Staff", "ManagerId")
+                        .WithMany()
+                        .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("ImportScheduledJobs.Entities.Store", "Store")
