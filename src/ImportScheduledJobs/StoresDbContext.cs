@@ -11,10 +11,6 @@ public class StoresDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Order>()
-            .Property(entity => entity.OrderStatus)
-            .HasConversion<int>();
-
         modelBuilder.Entity<Order>(entity =>
         {
             entity
