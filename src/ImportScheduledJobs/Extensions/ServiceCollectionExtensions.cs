@@ -1,3 +1,4 @@
+using ImportScheduledJobs.Consumers;
 using ImportScheduledJobs.Options;
 using MassTransit;
 using Nest;
@@ -14,6 +15,8 @@ public static class ServiceCollectionExtensions
 
         serviceCollection.AddMassTransit(busRegistrationConfigurator =>
         {
+            busRegistrationConfigurator.AddConsumer<CreateMessageConsumer>(typeof(OrderAuditConsumerDefinition));
+
             busRegistrationConfigurator.UsingRabbitMq((busRegistrationContext, rabbitMqBusFactoryConfigurator) =>
             {
                 rabbitMqBusFactoryConfigurator.Host(
@@ -25,6 +28,17 @@ public static class ServiceCollectionExtensions
                         rabbitMqHostConfigurator.Password(massTransitOptions.Password);
                     });
 
+                rabbitMqBusFactoryConfigurator.UseMessageRetry(retryConfigurator =>
+                    retryConfigurator.Exponential(
+                        retryLimit: massTransitOptions.RetryLimit ?? MassTransitOptions.DefaultRetryLimit,
+                        minInterval: TimeSpan.FromSeconds(
+                            massTransitOptions.MinIntervalInSeconds ?? MassTransitOptions.DefaultMinIntervalInSeconds),
+                        maxInterval: TimeSpan.FromSeconds(
+                            massTransitOptions.MaxIntervalInSeconds ?? MassTransitOptions.DefaultMaxIntervalInSeconds),
+                        intervalDelta: TimeSpan.FromSeconds(
+                            massTransitOptions.IntervalDeltaInSeconds ?? MassTransitOptions.DefaultIntervalDeltaInSeconds)
+                    ));
+
                 rabbitMqBusFactoryConfigurator.ConfigureEndpoints(busRegistrationContext);
             });
         });
@@ -34,7 +48,10 @@ public static class ServiceCollectionExtensions
     {
         var elkOptions = configuration.GetSection(nameof(ELKOptions)).Get<ELKOptions>();
         var settings = new ConnectionSettings(new Uri(elkOptions.ElasticSearchUri!))
-            .DefaultIndex(elkOptions.DefaultIndex);
+            .DefaultIndex(elkOptions.DefaultIndex)
+            .MaximumRetries(elkOptions.MaximumRetries ?? ELKOptions.DefaultMaximumRetries)
+            .MaxRetryTimeout(
+                TimeSpan.FromSeconds(elkOptions.MaxRetryTimeoutInSeconds ?? ELKOptions.DefaultMaxRetryTimeoutInSeconds));
 
         serviceCollection.AddSingleton<IElasticClient>(new ElasticClient(settings));
     }
