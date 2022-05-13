@@ -1,6 +1,8 @@
 using ImportScheduledJobs;
 using ImportScheduledJobs.Extensions;
+using ImportScheduledJobs.Mappers;
 using ImportScheduledJobs.Options;
+using ImportScheduledJobs.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 
@@ -25,7 +27,9 @@ IHost host = Host.CreateDefaultBuilder(args)
         });
 
         serviceCollection.AddHostedService<Worker>();
-        serviceCollection.AddTransient<OrderItemMapper>();
+
+        serviceCollection.AddScoped<IOrderItemRepository, OrderItemRepository>();
+        serviceCollection.AddScoped<IOrderItemMapper, OrderItemMapper>();
     })
     .UseNLog()
     .Build();
