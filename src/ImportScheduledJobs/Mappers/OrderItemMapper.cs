@@ -1,16 +1,12 @@
 using ImportScheduledJobs.Entities;
 
-namespace ImportScheduledJobs;
+namespace ImportScheduledJobs.Mappers;
 
-public record ProductDetails(string ProductName, string BrandName, string CategoryName);
-public record ShippingAddress(string Street, string City, string State, string ZipCode);
-public record OrderDetails(ShippingAddress ShippingAddress, DateTime? ShippedDate, int StaffId);
-public record OrderedItem(OrderDetails OrderDetails, ProductDetails ProductDetails, int Quantity, decimal ListPrice);
-
-public class OrderItemMapper
+public class OrderItemMapper : IOrderItemMapper
 {
     public OrderedItem Map(OrderItem orderItem) =>
         new OrderedItem(
+            ItemId: orderItem.ItemId,
             OrderDetails: new OrderDetails(
                 new ShippingAddress(
                     Street: orderItem.Order.Customer?.Street ?? string.Empty,
