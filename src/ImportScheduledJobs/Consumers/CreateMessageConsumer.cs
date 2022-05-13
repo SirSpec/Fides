@@ -18,7 +18,7 @@ public class CreateMessageConsumer : IConsumer<Batch<CreateMessage>>
 
     public async Task Consume(ConsumeContext<Batch<CreateMessage>> context)
     {
-        // var messages = context.Message.Select(message => message.Message);
-        // elasticClient.IndexMany<CreateMessage>(messages);
+        var messages = context.Message.Select(message => message.Message);
+        await elasticClient.IndexManyAsync<CreateMessage>(messages);
     }
 }
