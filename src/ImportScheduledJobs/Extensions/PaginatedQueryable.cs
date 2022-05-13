@@ -16,7 +16,7 @@ public class PaginatedQueryable<TType>
         _totalPages = (int)Math.Ceiling(count / (double)pageSize);
     }
 
-    public async ValueTask<IEnumerable<TType>> NextPageAsync(CancellationToken cancellationToken = default) =>
+    public async Task<IEnumerable<TType>> NextPageAsync(CancellationToken cancellationToken = default) =>
         _pageIndex < _totalPages
             ? await _source
                 .Skip(_pageIndex++ * _pageSize)
