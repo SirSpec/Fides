@@ -1,12 +1,13 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ImportScheduledJobs.Extensions;
 
 public static class QueryableExtensions
 {
-    public static async Task ForEachPageAsync<TType>(
+    public static async Task ForEachPageAsync<TType, TResult>(
         this IQueryable<TType> source,
-        Func<IEnumerable<TType>, Task> func,
+        Expression<Func<TType, TResult>> func,
         int pageSize,
         CancellationToken cancellationToken = default)
     {
@@ -21,10 +22,9 @@ public static class QueryableExtensions
                 var results = await source
                     .Skip(i * pageSize)
                     .Take(pageSize)
+                    .Select(func)
                     .ToListAsync(cancellationToken)
                     .ConfigureAwait(false);
-
-                await func(results);
             }
         }
     }
