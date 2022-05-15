@@ -6,14 +6,15 @@ namespace ImportScheduledJobs.Repositories;
 
 public class OrderItemRepository : IOrderItemRepository
 {
-    private readonly StoresDbContext storesDbContext;
+    private readonly StoresDbContext _storesDbContext;
 
     public OrderItemRepository(StoresDbContext storesDbContext) =>
-        this.storesDbContext = storesDbContext;
+        _storesDbContext = storesDbContext;
 
     public async Task<PaginatedQueryable<OrderItem>> GetSoldItemsSortedByBrandAndPriceAync(int pageSize) =>
-        await storesDbContext
+        await _storesDbContext
             .OrderItems
+            .AsNoTracking()
             .Include(orderItem => orderItem.Order)
             .ThenInclude(order => order.Customer)
             .Include(orderItem => orderItem.Product)
