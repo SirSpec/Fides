@@ -2,7 +2,6 @@ using ImportScheduledJobs.Entities;
 
 namespace ImportScheduledJobs.Mappers;
 
-public interface IOrderItemMapper
+public interface IOrderItemMapper : IQueryObject<OrderItem, OrderedItem>
 {
-    public OrderedItem Map(OrderItem orderItem);
 }
