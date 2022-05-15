@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ImportScheduledJobs.Extensions;
@@ -16,20 +17,18 @@ public class PaginatedQueryable<TType>
         _totalPages = (int)Math.Ceiling(count / (double)pageSize);
     }
 
-    public async Task<IEnumerable<TType>> NextPageAsync(CancellationToken cancellationToken = default) =>
-        _pageIndex < _totalPages
-            ? await _source
-                .Skip(_pageIndex++ * _pageSize)
-                .Take(_pageSize)
-                .ToListAsync(cancellationToken)
-                .ConfigureAwait(false)
-            : Enumerable.Empty<TType>();
+    public bool HasNextPage =>
+        _pageIndex < _totalPages;
 
-    public async Task ForEachPageAsync(Func<IEnumerable<TType>, Task> func, CancellationToken cancellationToken = default) =>
-        await _source
-            .ForEachPageAsync(
-                func,
-                pageSize: _pageSize,
-                cancellationToken)
-            .ConfigureAwait(false);
+    public async Task<IEnumerable<TResult>> NextPageAsync<TResult>(
+        Expression<Func<TType, TResult>> func,
+        CancellationToken cancellationToken = default) =>
+            HasNextPage
+                ? await _source
+                    .Skip(_pageIndex++ * _pageSize)
+                    .Take(_pageSize)
+                    .Select(func)
+                    .ToListAsync(cancellationToken)
+                    .ConfigureAwait(false)
+                : Enumerable.Empty<TResult>();
 }
