@@ -1,28 +1,29 @@
+using System.Linq.Expressions;
 using ImportScheduledJobs.Entities;
 
 namespace ImportScheduledJobs.Mappers;
 
 public class OrderItemMapper : IOrderItemMapper
 {
-    public OrderedItem Map(OrderItem orderItem) =>
-        new OrderedItem(
-            ItemId: orderItem.ItemId,
-            OrderDetails: new OrderDetails(
+    public Expression<Func<OrderItem, OrderedItem>> Query =>
+        orderItem => new OrderedItem(
+            orderItem.ItemId,
+            new OrderDetails(
                 new ShippingAddress(
-                    Street: orderItem.Order.Customer?.Street ?? string.Empty,
-                    City: orderItem.Order.Customer?.City ?? string.Empty,
-                    State: orderItem.Order.Customer?.State ?? string.Empty,
-                    ZipCode: orderItem.Order.Customer?.ZipCode ?? string.Empty
+                    orderItem.Order.Customer!.Street ?? string.Empty,
+                    orderItem.Order.Customer!.City ?? string.Empty,
+                    orderItem.Order.Customer!.State ?? string.Empty,
+                    orderItem.Order.Customer!.ZipCode ?? string.Empty
                 ),
-                ShippedDate: orderItem.Order.ShippedDate,
-                StaffId: orderItem.Order.StaffId
+                orderItem.Order.ShippedDate,
+                orderItem.Order.StaffId
             ),
-            ProductDetails: new ProductDetails(
-                ProductName: orderItem.Product.ProductName,
-                BrandName: orderItem.Product.Brand.BrandName,
-                CategoryName: orderItem.Product.Category.CategoryName
+            new ProductDetails(
+                orderItem.Product.ProductName,
+                orderItem.Product.Brand.BrandName,
+                orderItem.Product.Category.CategoryName
             ),
-            Quantity: orderItem.Quantity,
-            ListPrice: orderItem.ListPrice
+            orderItem.Quantity,
+            orderItem.ListPrice
         );
 }
