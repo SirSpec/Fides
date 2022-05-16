@@ -1,7 +1,7 @@
 using ImportScheduledJobs.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ImportScheduledJobs;
+namespace ImportScheduledJobs.Repositories;
 
 public class StoresDbContext : DbContext
 {
