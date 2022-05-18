@@ -28,6 +28,8 @@ IHost host = Host.CreateDefaultBuilder(args)
                 sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
         });
 
+        serviceCollection.AddHostedService<ImportWorker>();
+
         serviceCollection.AddScoped<ICompletedOrdersQuery, CompletedOrdersQuery>();
         serviceCollection.AddScoped<ImportMessageConsumer>();
         serviceCollection.AddScoped<DeleteMessageConsumer>();
