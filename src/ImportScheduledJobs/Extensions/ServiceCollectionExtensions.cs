@@ -17,6 +17,30 @@ public static class ServiceCollectionExtensions
         {
             busRegistrationConfigurator.UsingRabbitMq((busRegistrationContext, rabbitMqBusFactoryConfigurator) =>
             {
+                rabbitMqBusFactoryConfigurator.ReceiveEndpoint(syncOptions.Endpoint!, receiveEndpointConfigurator =>
+                {
+                    receiveEndpointConfigurator.PrefetchCount = syncOptions.PrefetchCount ?? SyncOptions.DefaultPrefetchCount;
+                    receiveEndpointConfigurator.EnablePriority(syncOptions.PriorityLimit ?? SyncOptions.DefaultPriorityLimit);
+
+                    receiveEndpointConfigurator.Batch<ImportMessage>(batchConfigurator =>
+                    {
+                        batchConfigurator.MessageLimit = syncOptions.MessageLimit ?? SyncOptions.DefaultMessageLimit;
+                        batchConfigurator.ConcurrencyLimit = syncOptions.ConcurrencyLimit ?? SyncOptions.DefaultConcurrencyLimit;
+                        batchConfigurator.TimeLimit = TimeSpan.FromSeconds(syncOptions.TimeLimit ?? SyncOptions.DefaultTimeLimit);
+
+                        batchConfigurator.Consumer<ImportMessageConsumer, ImportMessage>(serviceCollection.BuildServiceProvider());
+                    });
+
+                    receiveEndpointConfigurator.Batch<DeleteMessage>(batchConfigurator =>
+                    {
+                        batchConfigurator.MessageLimit = syncOptions.MessageLimit ?? SyncOptions.DefaultMessageLimit;
+                        batchConfigurator.ConcurrencyLimit = syncOptions.ConcurrencyLimit ?? SyncOptions.DefaultConcurrencyLimit;
+                        batchConfigurator.TimeLimit = TimeSpan.FromSeconds(syncOptions.TimeLimit ?? SyncOptions.DefaultTimeLimit);
+
+                        batchConfigurator.Consumer<DeleteMessageConsumer, DeleteMessage>(serviceCollection.BuildServiceProvider());
+                    });
+                });
+
                 rabbitMqBusFactoryConfigurator.Host(
                     syncOptions.Host,
                     syncOptions.VirtualHost,
