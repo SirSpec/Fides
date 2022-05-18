@@ -1,6 +1,6 @@
 using Nest;
 
-namespace ImportScheduledJobs.Mappers;
+namespace ImportScheduledJobs.QueryObjects.Models;
 
 public record ProductDetails(string ProductName, string BrandName, string CategoryName);
 public record ShippingAddress(string Street, string City, string State, string ZipCode);

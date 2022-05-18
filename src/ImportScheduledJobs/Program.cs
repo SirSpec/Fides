@@ -1,11 +1,12 @@
 using ImportScheduledJobs.Consumers;
 using ImportScheduledJobs.Extensions;
-using ImportScheduledJobs.Mappers;
 using ImportScheduledJobs.Options;
 using ImportScheduledJobs.Repositories;
 using ImportScheduledJobs.Workers;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
+using ImportScheduledJobs.QueryObjects.Mappers;
+using ImportScheduledJobs.QueryObjects.Queries;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostBuilderContext, serviceCollection) =>
@@ -27,6 +28,7 @@ IHost host = Host.CreateDefaultBuilder(args)
                 sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
         });
 
+        serviceCollection.AddScoped<ICompletedOrdersQuery, CompletedOrdersQuery>();
         serviceCollection.AddScoped<ImportMessageConsumer>();
         serviceCollection.AddScoped<DeleteMessageConsumer>();
         serviceCollection.AddScoped<IOrderItemRepository, OrderItemRepository>();

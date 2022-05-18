@@ -1,4 +1,4 @@
-using ImportScheduledJobs.Mappers;
+using ImportScheduledJobs.QueryObjects.Models;
 using MassTransit;
 using Nest;
 

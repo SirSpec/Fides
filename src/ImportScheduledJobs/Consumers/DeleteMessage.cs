@@ -1,4 +1,4 @@
-using ImportScheduledJobs.Mappers;
+using ImportScheduledJobs.QueryObjects.Models;
 
 namespace ImportScheduledJobs.Consumers;
 

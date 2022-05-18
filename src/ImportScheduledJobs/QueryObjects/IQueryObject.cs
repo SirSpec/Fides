@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace ImportScheduledJobs.Mappers;
+namespace ImportScheduledJobs.QueryObjects;
 
 public interface IQueryObject<T, TResult>
 {
