@@ -84,3 +84,4 @@ docker compose up
 - [Retry](https://docs.microsoft.com/en-us/azure/architecture/patterns/retry)
 - [Circuit Breaker](https://docs.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker)
 - [Rate Limiting](https://docs.microsoft.com/en-us/azure/architecture/patterns/rate-limiting-pattern)
+- [Priority Queue](https://docs.microsoft.com/en-us/azure/architecture/patterns/priority-queue)
