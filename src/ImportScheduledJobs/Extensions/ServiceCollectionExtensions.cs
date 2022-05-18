@@ -9,34 +9,32 @@ public static class ServiceCollectionExtensions
 {
     public static void AddMassTransitEndpoints(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
-        var massTransitOptions = configuration
-            .GetSection(nameof(MassTransitOptions))
-            .Get<MassTransitOptions>();
+        var syncOptions = configuration
+            .GetSection(nameof(SyncOptions))
+            .Get<SyncOptions>();
 
         serviceCollection.AddMassTransit(busRegistrationConfigurator =>
         {
-            busRegistrationConfigurator.AddConsumer<CreateMessageConsumer>(typeof(OrderAuditConsumerDefinition));
-
             busRegistrationConfigurator.UsingRabbitMq((busRegistrationContext, rabbitMqBusFactoryConfigurator) =>
             {
                 rabbitMqBusFactoryConfigurator.Host(
-                    massTransitOptions.Host,
-                    massTransitOptions.VirtualHost,
+                    syncOptions.Host,
+                    syncOptions.VirtualHost,
                     rabbitMqHostConfigurator =>
                     {
-                        rabbitMqHostConfigurator.Username(massTransitOptions.UserName);
-                        rabbitMqHostConfigurator.Password(massTransitOptions.Password);
+                        rabbitMqHostConfigurator.Username(syncOptions.UserName);
+                        rabbitMqHostConfigurator.Password(syncOptions.Password);
                     });
 
                 rabbitMqBusFactoryConfigurator.UseMessageRetry(retryConfigurator =>
                     retryConfigurator.Exponential(
-                        retryLimit: massTransitOptions.RetryLimit ?? MassTransitOptions.DefaultRetryLimit,
+                        retryLimit: syncOptions.RetryLimit ?? SyncOptions.DefaultRetryLimit,
                         minInterval: TimeSpan.FromSeconds(
-                            massTransitOptions.MinIntervalInSeconds ?? MassTransitOptions.DefaultMinIntervalInSeconds),
+                            syncOptions.MinIntervalInSeconds ?? SyncOptions.DefaultMinIntervalInSeconds),
                         maxInterval: TimeSpan.FromSeconds(
-                            massTransitOptions.MaxIntervalInSeconds ?? MassTransitOptions.DefaultMaxIntervalInSeconds),
+                            syncOptions.MaxIntervalInSeconds ?? SyncOptions.DefaultMaxIntervalInSeconds),
                         intervalDelta: TimeSpan.FromSeconds(
-                            massTransitOptions.IntervalDeltaInSeconds ?? MassTransitOptions.DefaultIntervalDeltaInSeconds)
+                            syncOptions.IntervalDeltaInSeconds ?? SyncOptions.DefaultIntervalDeltaInSeconds)
                     ));
 
                 rabbitMqBusFactoryConfigurator.ConfigureEndpoints(busRegistrationContext);
