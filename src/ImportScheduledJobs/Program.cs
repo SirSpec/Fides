@@ -34,6 +34,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         serviceCollection.AddScoped<ImportMessageConsumer>();
         serviceCollection.AddScoped<DeleteMessageConsumer>();
         serviceCollection.AddScoped<IOrderItemRepository, OrderItemRepository>();
+        serviceCollection.AddScoped<IOrderedItemIndexingRepository, OrderedItemIndexingRepository>();
         serviceCollection.AddScoped<IOrderItemMapper, OrderItemMapper>();
     })
     .UseNLog()
