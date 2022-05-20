@@ -7,14 +7,14 @@ namespace ImportScheduledJobs.Consumers;
 public class ImportMessageConsumer : IConsumer<Batch<ImportMessage>>
 {
     private readonly ILogger<ImportMessageConsumer> _logger;
-    private readonly IOrderedItemIndexingRepository orderedItemIndexingRepository;
+    private readonly IOrderedItemIndexingRepository _orderedItemIndexingRepository;
 
     public ImportMessageConsumer(
         ILogger<ImportMessageConsumer> logger,
         IOrderedItemIndexingRepository orderedItemIndexingRepository)
     {
         this._logger = logger;
-        this.orderedItemIndexingRepository = orderedItemIndexingRepository;
+        this._orderedItemIndexingRepository = orderedItemIndexingRepository;
     }
 
     public async Task Consume(ConsumeContext<Batch<ImportMessage>> context)
@@ -26,7 +26,7 @@ public class ImportMessageConsumer : IConsumer<Batch<ImportMessage>>
                     .Where(item => item is not null);
 
             if (orderedItems.Any())
-                await orderedItemIndexingRepository.IndexDocuments(orderedItems);
+                await _orderedItemIndexingRepository.IndexDocuments(orderedItems);
         }
         catch (TransportException exception)
         {
