@@ -1,29 +1,40 @@
-using ImportScheduledJobs.QueryObjects.Models;
+using ImportScheduledJobs.Repositories;
 using MassTransit;
-using Nest;
+using TransportException = Elastic.Transport.TransportException;
 
 namespace ImportScheduledJobs.Consumers;
 
 public class ImportMessageConsumer : IConsumer<Batch<ImportMessage>>
 {
     private readonly ILogger<ImportMessageConsumer> _logger;
-    private readonly IElasticClient _elasticClient;
+    private readonly IOrderedItemIndexingRepository orderedItemIndexingRepository;
 
     public ImportMessageConsumer(
         ILogger<ImportMessageConsumer> logger,
-        IElasticClient elasticClient)
+        IOrderedItemIndexingRepository orderedItemIndexingRepository)
     {
         this._logger = logger;
-        this._elasticClient = elasticClient;
+        this.orderedItemIndexingRepository = orderedItemIndexingRepository;
     }
 
     public async Task Consume(ConsumeContext<Batch<ImportMessage>> context)
     {
-        var messages = context.Message.Select(message => message.Message.OrderedItem);
-        var indexManyResponse = await _elasticClient.IndexManyAsync<OrderedItem>(messages);
+        try
+        {
+            var orderedItems = context.Message
+                    .Select(message => message.Message.OrderedItem)
+                    .Where(item => item is not null);
 
-        if (indexManyResponse.Errors)
-            foreach (var itemWithError in indexManyResponse.ItemsWithErrors)
-                _logger.LogError($"Failed to index document {itemWithError.Id}: {itemWithError.Error}");
+            if (orderedItems.Any())
+                await orderedItemIndexingRepository.IndexDocuments(orderedItems);
+        }
+        catch (TransportException exception)
+        {
+            _logger.LogError(exception, "Error occurred during indexing documents.");
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Unexpected error.");
+        }
     }
 }
