@@ -4,12 +4,18 @@ namespace ImportScheduledJobs.Extensions;
 
 public static class PaginatedQueryableExtensions
 {
-    public static async Task<PaginatedQueryable<TType>> ToPaginatedAsync<TType>(
+    public static async ValueTask<PaginatedQueryable<TType>> ToPaginatedAsync<TType>(
         this IQueryable<TType> source,
         int pageSize,
-        CancellationToken cancellationToken = default) =>
-            new PaginatedQueryable<TType>(
-                source,
-                count: await source.CountAsync(cancellationToken),
-                pageSize: pageSize);
+        CancellationToken cancellationToken = default)
+    {
+        var count = source is IAsyncEnumerable<TType>
+            ? await source.CountAsync(cancellationToken)
+            : source.Count();
+
+        return new PaginatedQueryable<TType>(
+            source,
+            count: count,
+            pageSize: pageSize);
+    }
 }
