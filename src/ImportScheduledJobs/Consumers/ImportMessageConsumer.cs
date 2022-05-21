@@ -13,8 +13,8 @@ public class ImportMessageConsumer : IConsumer<Batch<ImportMessage>>
         ILogger<ImportMessageConsumer> logger,
         IOrderedItemIndexingRepository orderedItemIndexingRepository)
     {
-        this._logger = logger;
-        this._orderedItemIndexingRepository = orderedItemIndexingRepository;
+        _logger = logger;
+        _orderedItemIndexingRepository = orderedItemIndexingRepository;
     }
 
     public async Task Consume(ConsumeContext<Batch<ImportMessage>> context)
@@ -30,7 +30,7 @@ public class ImportMessageConsumer : IConsumer<Batch<ImportMessage>>
         }
         catch (TransportException exception)
         {
-            _logger.LogError(exception, "Error occurred during indexing documents.");
+            _logger.LogError(exception, "Error occurred while indexing documents.");
         }
         catch (Exception exception)
         {
