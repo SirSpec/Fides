@@ -29,22 +29,17 @@ public class PaginatedQueryable<TType>
     {
         if (HasNextPage)
         {
+            var results = _source
+                .Skip(_pageIndex++ * _pageSize)
+                .Take(_pageSize)
+                .Select(func);
+
             return _source is IAsyncEnumerable<TType>
-                ? await _source
-                    .Skip(_pageIndex++ * _pageSize)
-                    .Take(_pageSize)
-                    .Select(func)
+                ? await results
                     .ToListAsync(cancellationToken)
                     .ConfigureAwait(false)
-                : NextPage(func);
+                : results.ToList();
         }
         else return Enumerable.Empty<TResult>();
     }
-
-    private IEnumerable<TResult> NextPage<TResult>(Expression<Func<TType, TResult>> func) =>
-        _source
-            .Skip(_pageIndex++ * _pageSize)
-            .Take(_pageSize)
-            .Select(func)
-            .ToList();
 }
