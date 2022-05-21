@@ -26,15 +26,20 @@ public class PaginatedQueryableTest
     }
 
     [Fact]
-    public async Task NextPage_10ElementsPageSize5__2Pages()
+    public async Task NextPage_11ElementsPageSize5__3Pages()
     {
-        var sut = new PaginatedQueryable<int>(Enumerable.Repeat<int>(0, 10).AsQueryable(), count: 10, pageSize: 5);
+        const int elementsCount = 11;
+        const int pageSize = 5;
+        var sut = await Enumerable.Repeat<int>(int.MinValue, elementsCount).AsQueryable().ToPaginatedAsync(pageSize);
+
         var result1 = await sut.NextPageAsync(value => value);
         var result2 = await sut.NextPageAsync(value => value);
         var result3 = await sut.NextPageAsync(value => value);
+        var result4 = await sut.NextPageAsync(value => value);
 
-        Assert.Equal(5, result1.Count());
-        Assert.Equal(5, result2.Count());
-        Assert.Empty(result3);
+        Assert.Equal(pageSize, result1.Count());
+        Assert.Equal(pageSize, result2.Count());
+        Assert.Single(result3);
+        Assert.Empty(result4);
     }
 }
