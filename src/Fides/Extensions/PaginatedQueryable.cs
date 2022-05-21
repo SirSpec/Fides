@@ -20,7 +20,10 @@ public class PaginatedQueryable<TType>
     public bool HasNextPage =>
         _pageIndex < _totalPages;
 
-    public async Task<IEnumerable<TResult>> NextPageAsync<TResult>(
+    public static PaginatedQueryable<TType> Empty() =>
+        new PaginatedQueryable<TType>(Enumerable.Empty<TType>().AsQueryable(), count: 0, pageSize: 0);
+
+    public async ValueTask<IEnumerable<TResult>> NextPageAsync<TResult>(
         Expression<Func<TType, TResult>> func,
         CancellationToken cancellationToken = default)
     {
@@ -44,7 +47,4 @@ public class PaginatedQueryable<TType>
             .Take(_pageSize)
             .Select(func)
             .ToList();
-
-    public static PaginatedQueryable<TType> Empty() =>
-        new PaginatedQueryable<TType>(Enumerable.Empty<TType>().AsQueryable(), count: 0, pageSize: 0);
 }
