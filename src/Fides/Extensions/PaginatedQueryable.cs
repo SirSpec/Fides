@@ -12,15 +12,20 @@ public class PaginatedQueryable<TType>
 
     public PaginatedQueryable(IQueryable<TType> source, int count, int pageSize)
     {
-        _source = source;
-        _pageSize = pageSize;
-        _totalPages = (int)Math.Ceiling(count / (double)pageSize);
+        if (source is IAsyncEnumerable<TType>)
+        {
+            _source = source;
+            _pageSize = pageSize;
+            _totalPages = (int)Math.Ceiling(count / (double)pageSize);
+        }
+        else throw new ArgumentException(
+            $"IQueryable<{typeof(TType).Name}> {nameof(source)} doesn't implement IAsyncEnumerable<{typeof(TType).Name}>.");
     }
 
     public bool HasNextPage =>
         _pageIndex < _totalPages;
 
-    public async Task<IEnumerable<TResult>> NextPageAsync<TResult>(
+    public virtual async Task<IEnumerable<TResult>> NextPageAsync<TResult>(
         Expression<Func<TType, TResult>> func,
         CancellationToken cancellationToken = default) =>
             HasNextPage
@@ -32,6 +37,8 @@ public class PaginatedQueryable<TType>
                     .ConfigureAwait(false)
                 : Enumerable.Empty<TResult>();
 
-    public static PaginatedQueryable<TType> Empty() => new PaginatedQueryable<TType>(
-        Enumerable.Empty<TType>().AsQueryable(), count: 0, pageSize: 0);
+    public static PaginatedQueryable<TType> Empty()
+    {
+        return new PaginatedQueryable<TType>(Enumerable.Empty<TType>().AsQueryable(), count: 0, pageSize: 0);
+    }
 }

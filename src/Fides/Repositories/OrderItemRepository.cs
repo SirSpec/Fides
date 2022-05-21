@@ -31,6 +31,7 @@ public class OrderItemRepository : IOrderItemRepository
                 .ThenInclude(product => product.Brand)
                 .Include(orderItem => orderItem.Product)
                 .ThenInclude(product => product.Category)
+                .AsNoTracking()
                 .Where(where.Query)
                 .OrderBy(orderItem => orderItem.Product.BrandId)
                 .ThenByDescending(orderItem => orderItem.ListPrice)
