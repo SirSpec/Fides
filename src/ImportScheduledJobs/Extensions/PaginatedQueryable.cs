@@ -31,4 +31,7 @@ public class PaginatedQueryable<TType>
                     .ToListAsync(cancellationToken)
                     .ConfigureAwait(false)
                 : Enumerable.Empty<TResult>();
+
+    public static PaginatedQueryable<TType> Empty() => new PaginatedQueryable<TType>(
+        Enumerable.Empty<TType>().AsQueryable(), 0, 0);
 }
