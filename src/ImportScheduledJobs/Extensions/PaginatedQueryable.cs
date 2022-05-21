@@ -33,5 +33,5 @@ public class PaginatedQueryable<TType>
                 : Enumerable.Empty<TResult>();
 
     public static PaginatedQueryable<TType> Empty() => new PaginatedQueryable<TType>(
-        Enumerable.Empty<TType>().AsQueryable(), 0, 0);
+        Enumerable.Empty<TType>().AsQueryable(), count: 0, pageSize: 0);
 }
