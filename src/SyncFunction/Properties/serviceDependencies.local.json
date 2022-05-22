@@ -3,11 +3,6 @@
     "storage1": {
       "type": "storage.emulator",
       "connectionId": "AzureWebJobsStorage"
-    },
-    "mssql1": {
-      "secretStore": null,
-      "type": "mssql.onprem",
-      "connectionId": "ConnectionStrings:StoresDbContext"
     }
   }
 }
