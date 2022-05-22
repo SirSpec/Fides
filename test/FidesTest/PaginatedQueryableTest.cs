@@ -1,9 +1,7 @@
-using System.Linq;
-using System.Threading.Tasks;
-using ImportScheduledJobs.Extensions;
+using SharedKernel.Extensions;
 using Xunit;
 
-namespace Fides;
+namespace SyncFunction;
 
 public class PaginatedQueryableTest
 {
