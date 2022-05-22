@@ -1,5 +1,5 @@
-using SyncFunction.Entities;
 using Microsoft.EntityFrameworkCore;
+using SyncFunction.Entities;
 
 namespace SyncFunction.Repositories;
 

@@ -1,12 +1,12 @@
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SyncFunction.Extensions;
 using SyncFunction.Options;
 using SyncFunction.QueryObjects.Mappers;
 using SyncFunction.QueryObjects.Queries;
 using SyncFunction.Repositories;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 [assembly: FunctionsStartup(typeof(SyncFunction.Startup))]
 
@@ -16,7 +16,7 @@ public class Startup : FunctionsStartup
 {
     public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
     {
-        FunctionsHostBuilderContext context = builder.GetContext();
+        var context = builder.GetContext();
 
         builder.ConfigurationBuilder
             .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: true, reloadOnChange: false)
@@ -34,21 +34,15 @@ public class Startup : FunctionsStartup
         builder.Services.AddElasticClient(configuration);
 
         string connectionString = configuration.GetConnectionString("StoresDbContext");
-        builder.Services.AddDbContext<StoresDbContext>(
-            options => SqlServerDbContextOptionsExtensions.UseSqlServer(options, connectionString));
+        builder.Services.AddDbContext<StoresDbContext>(options =>
+        {
+            if (configuration.GetSection("environment").Get<string>() == "Development")
+                options.EnableDetailedErrors().EnableSensitiveDataLogging();
 
-
-        //builder.Services.AddDbContext<StoresDbContext>(options =>
-        //{
-        //    //if (builder.HostingEnvironment.IsDevelopment())
-        //        options
-        //            .EnableDetailedErrors()
-        //            .EnableSensitiveDataLogging();
-
-        //    options.UseSqlServer(
-        //        configuration.GetConnectionString("StoresDbContext"),
-        //        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
-        //});
+            options.UseSqlServer(
+                configuration.GetConnectionString("StoresDbContext"),
+                sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
+        });
 
         builder.Services.AddScoped<ICompletedOrdersQuery, CompletedOrdersQuery>();
         builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();

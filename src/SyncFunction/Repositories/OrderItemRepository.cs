@@ -1,8 +1,8 @@
-using SyncFunction.Entities;
-using SyncFunction.QueryObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Extensions;
+using SyncFunction.Entities;
+using SyncFunction.QueryObjects;
 
 namespace SyncFunction.Repositories;
 

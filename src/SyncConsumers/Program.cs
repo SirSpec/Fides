@@ -1,8 +1,8 @@
+using NLog.Web;
 using SyncConsumers.Consumers;
 using SyncConsumers.Extensions;
 using SyncConsumers.Options;
 using SyncConsumers.Repositories;
-using NLog.Web;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostBuilderContext, serviceCollection) =>

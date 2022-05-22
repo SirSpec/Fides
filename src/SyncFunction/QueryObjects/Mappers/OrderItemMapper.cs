@@ -1,6 +1,6 @@
-using System.Linq.Expressions;
 using SharedKernel.QueryObjects.Models;
 using SyncFunction.Entities;
+using System.Linq.Expressions;
 
 namespace SyncFunction.QueryObjects.Mappers;
 

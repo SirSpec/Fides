@@ -1,7 +1,7 @@
-using SyncConsumers.Repositories;
 using MassTransit;
-using TransportException = Elastic.Transport.TransportException;
 using SharedKernel.Consumers;
+using SyncConsumers.Repositories;
+using TransportException = Elastic.Transport.TransportException;
 
 namespace SyncConsumers.Consumers;
 

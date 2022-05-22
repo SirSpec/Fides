@@ -1,8 +1,8 @@
-using SyncConsumers.Consumers;
-using SyncConsumers.Options;
 using MassTransit;
 using Nest;
 using SharedKernel.Consumers;
+using SyncConsumers.Consumers;
+using SyncConsumers.Options;
 
 namespace SyncConsumers.Extensions;
 

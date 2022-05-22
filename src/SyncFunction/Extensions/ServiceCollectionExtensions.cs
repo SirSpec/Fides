@@ -1,8 +1,8 @@
-using SyncFunction.Options;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nest;
+using SyncFunction.Options;
 
 namespace SyncFunction.Extensions;
 

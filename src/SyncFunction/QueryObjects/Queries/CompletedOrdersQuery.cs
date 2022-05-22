@@ -1,5 +1,5 @@
-using System.Linq.Expressions;
 using SyncFunction.Entities;
+using System.Linq.Expressions;
 
 namespace SyncFunction.QueryObjects.Queries;
 

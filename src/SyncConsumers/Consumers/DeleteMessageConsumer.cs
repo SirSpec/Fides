@@ -1,6 +1,6 @@
-using SyncConsumers.Repositories;
 using MassTransit;
 using SharedKernel.Consumers;
+using SyncConsumers.Repositories;
 
 namespace SyncConsumers.Consumers;
 
