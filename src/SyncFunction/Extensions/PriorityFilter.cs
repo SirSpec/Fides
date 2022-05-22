@@ -1,6 +1,6 @@
 using MassTransit;
 
-namespace SyncFunction.Workers;
+namespace SyncFunction.Extensions;
 
 public class PriorityFilter<T> : IFilter<SendContext<T>> where T : class
 {
