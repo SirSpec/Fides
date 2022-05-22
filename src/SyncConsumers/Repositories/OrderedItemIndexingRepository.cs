@@ -18,7 +18,7 @@ public class OrderedItemIndexingRepository : IOrderedItemIndexingRepository
 
     public async Task IndexDocuments(IEnumerable<OrderedItem> orderedItems)
     {
-        var indexManyResponse = await _elasticClient.IndexManyAsync<OrderedItem>(orderedItems);
+        var indexManyResponse = await _elasticClient.IndexManyAsync(orderedItems);
 
         if (indexManyResponse.IsValid is false)
         {
@@ -34,7 +34,7 @@ public class OrderedItemIndexingRepository : IOrderedItemIndexingRepository
 
     public async Task DeleteDocuments(IEnumerable<OrderedItem> orderedItems)
     {
-        var deleteManyResponse = await _elasticClient.DeleteManyAsync<OrderedItem>(orderedItems);
+        var deleteManyResponse = await _elasticClient.DeleteManyAsync(orderedItems);
 
         if (deleteManyResponse.IsValid is false)
         {

@@ -2,7 +2,7 @@ using MassTransit;
 
 namespace SyncFunction.Extensions;
 
-public class PriorityFilter<T> : IFilter<SendContext<T>> where T : class
+public class PriorityFilter<T> : IFilter<PublishContext<T>> where T : class
 {
     private readonly byte priority;
 
@@ -13,7 +13,7 @@ public class PriorityFilter<T> : IFilter<SendContext<T>> where T : class
     {
     }
 
-    public Task Send(SendContext<T> context, IPipe<SendContext<T>> next)
+    public Task Send(PublishContext<T> context, IPipe<PublishContext<T>> next)
     {
         if (context.TryGetPayload<RabbitMqSendContext>(out var rabbitMqSendContext))
             rabbitMqSendContext.SetPriority(priority);

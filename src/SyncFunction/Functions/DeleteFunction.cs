@@ -15,29 +15,26 @@ public class DeleteFunction
 {
     public const string Name = $"{nameof(SyncOrchestrator)}_{nameof(DeleteFunction)}";
 
-    private readonly ILogger<SyncOrchestrator> _logger;
     private readonly ICompletedOrdersQuery _completedOrdersQuery;
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IOrderItemMapper _orderItemMapper;
     private readonly IElasticClient _elasticClient;
-    private readonly IBusControl _busControl;
+    private readonly IPublishEndpoint _publishEndpoint;
     private readonly SyncOptions _syncOptions;
 
     public DeleteFunction(
-        ILogger<SyncOrchestrator> logger,
         ICompletedOrdersQuery completedOrdersQuery,
         IOrderItemRepository orderItemRepository,
         IOrderItemMapper orderItemMapper,
         IElasticClient elasticClient,
-        IBusControl busControl,
+        IPublishEndpoint publishEndpoint,
         IOptions<SyncOptions> syncOptions)
     {
-        _logger = logger;
         _completedOrdersQuery = completedOrdersQuery;
         _orderItemRepository = orderItemRepository;
         _orderItemMapper = orderItemMapper;
         _elasticClient = elasticClient;
-        _busControl = busControl;
+        _publishEndpoint = publishEndpoint;
         _syncOptions = syncOptions.Value;
     }
 

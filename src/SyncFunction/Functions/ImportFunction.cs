@@ -19,20 +19,20 @@ public class ImportFunction
     private readonly ICompletedOrdersQuery _completedOrdersQuery;
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IOrderItemMapper _orderItemMapper;
-    private readonly IBusControl _busControl;
+    private readonly IPublishEndpoint _publishEndpoint;
     private readonly SyncOptions _syncOptions;
 
     public ImportFunction(
         ICompletedOrdersQuery completedOrdersQuery,
         IOrderItemRepository orderItemRepository,
         IOrderItemMapper orderItemMapper,
-        IBusControl busControl,
+        IPublishEndpoint busControl,
         IOptions<SyncOptions> syncOptions)
     {
         _completedOrdersQuery = completedOrdersQuery;
         _orderItemRepository = orderItemRepository;
         _orderItemMapper = orderItemMapper;
-        _busControl = busControl;
+        _publishEndpoint = busControl;
         _syncOptions = syncOptions.Value;
     }
 
@@ -40,8 +40,6 @@ public class ImportFunction
     public async Task Import([ActivityTrigger] string name, ILogger log)
     {
         log.LogInformation($"{nameof(Import)} start.");
-
-        var sendEndpoint = await _busControl.GetSendEndpoint(_syncOptions.GetEndpointUri());
 
         var results = await _orderItemRepository.GetOrdersSortedByBrandAndPriceAync(
             _syncOptions.ImportPageSize,
@@ -54,14 +52,14 @@ public class ImportFunction
                 var page = await results.NextPageAsync(_orderItemMapper.Query);
                 var messages = page.Select(item => new ImportMessage(item));
 
-                await sendEndpoint.SendBatch(
+                await _publishEndpoint.PublishBatch(
                     messages,
-                    Pipe.New<SendContext<ImportMessage>>(pipeConfigurator =>
+                    Pipe.New<PublishContext<ImportMessage>>(pipeConfigurator =>
                         pipeConfigurator.UseFilter(new PriorityFilter<ImportMessage>(2))));
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                log.LogError($"Unexpected error.");
+                log.LogError(exception, $"Unexpected error.");
             }
         }
 
