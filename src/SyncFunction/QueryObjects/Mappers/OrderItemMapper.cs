@@ -8,7 +8,7 @@ public class OrderItemMapper : IOrderItemMapper
 {
     public Expression<Func<OrderItem, OrderedItem>> Query =>
         orderItem => new OrderedItem(
-            $"{orderItem.OrderId}_{orderItem.ItemId}",
+            new OrderedItemId(orderItem.OrderId, orderItem.ItemId),
             new OrderDetails(
                 new ShippingAddress(
                     orderItem.Order.Customer!.Street ?? string.Empty,
