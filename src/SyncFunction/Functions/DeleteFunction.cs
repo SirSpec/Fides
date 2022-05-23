@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Nest;
+using SharedKernel.QueryObjects.Models;
 using SyncFunction.Options;
 using SyncFunction.QueryObjects.Mappers;
 using SyncFunction.QueryObjects.Queries;
@@ -41,24 +42,26 @@ public class DeleteFunction
     [FunctionName(Name)]
     public async Task Delete([ActivityTrigger] string name, ILogger log)
     {
-        log.LogInformation($"{nameof(Delete)} start.");
+        var searchResponse = await _elasticClient.SearchAsync<OrderedItem>(searchDescriptor => searchDescriptor.Scroll("10s"));
 
-        //var results = await repository.GetOrdersSortedByBrandAndPriceAync(
-        //    _syncOptions.ImportPageSize,
-        //    _completedOrdersQuery);
+        while (searchResponse.Documents.Any())
+        {
+            var orderItems = await _orderItemRepository.GetExistingOrderItemIds(
+                searchResponse.Documents,
+                _completedOrdersQuery);
 
-        //var searchResponse = await elasticClient.SearchAsync<OrderedItem>(s => s
-        //    .Scroll("10s")
-        //);
+            var documentsToDelete = searchResponse
+                .Documents
+                .Where(document =>
+                    !orderItems.Any(orderItem =>
+                        orderItem.OrderId == document.Id.OrderId && orderItem.ItemId == document.Id.ItemId));
 
-        //int count = 0;
+            if (documentsToDelete.Any())
+            {
+                await _elasticClient.DeleteManyAsync(documentsToDelete);
+            }
 
-        //while (searchResponse.Documents.Any())
-        //{
-        //    count += searchResponse.Documents.Count;
-        //    searchResponse = await elasticClient.ScrollAsync<OrderedItem>("10s", searchResponse.ScrollId);
-        //}
-
-        log.LogInformation($"{nameof(Delete)} end.");
+            searchResponse = await _elasticClient.ScrollAsync<OrderedItem>("10s", searchResponse.ScrollId);
+        }
     }
 }

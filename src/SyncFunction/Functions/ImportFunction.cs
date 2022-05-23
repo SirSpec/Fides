@@ -39,8 +39,6 @@ public class ImportFunction
     [FunctionName(Name)]
     public async Task Import([ActivityTrigger] string name, ILogger log)
     {
-        log.LogInformation($"{nameof(Import)} start.");
-
         var results = await _orderItemRepository.GetOrdersSortedByBrandAndPriceAync(
             _syncOptions.ImportPageSize,
             _completedOrdersQuery);
@@ -62,7 +60,5 @@ public class ImportFunction
                 log.LogError(exception, $"Unexpected error.");
             }
         }
-
-        log.LogInformation($"{nameof(Import)} end.");
     }
 }

@@ -19,6 +19,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="NEST" Version="7.17.1" />
+    <PackageReference Include="PredicateBuilder" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
