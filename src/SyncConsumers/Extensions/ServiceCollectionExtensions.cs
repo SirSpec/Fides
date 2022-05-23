@@ -71,6 +71,7 @@ public static class ServiceCollectionExtensions
     {
         var elkOptions = configuration.GetSection(nameof(ELKOptions)).Get<ELKOptions>();
         var settings = new ConnectionSettings(new Uri(elkOptions.ElasticSearchUri!))
+            .EnableApiVersioningHeader()
             .DefaultIndex(elkOptions.DefaultIndex)
             .MaximumRetries(elkOptions.MaximumRetries ?? ELKOptions.DefaultMaximumRetries)
             .MaxRetryTimeout(
