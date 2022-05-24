@@ -19,6 +19,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
-    <ProjectReference Include="..\SyncFunction\SyncFunction.csproj" />
   </ItemGroup>
 </Project>
