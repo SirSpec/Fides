@@ -5,6 +5,11 @@ pool:
   vmImage: 'windows-latest'
   
 steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '6.0.x'
+      performMultiLevelLookup: true
   - task: DotNetCoreCLI@2
     displayName: Restore Nugets
     inputs:
