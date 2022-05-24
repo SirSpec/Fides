@@ -32,12 +32,14 @@ steps:
       testRunTitle: 'Fides'
       arguments: '--configuration $(buildConfiguration)'
   - task: DotNetCoreCLI@2
+    displayName: Create and publish packages to staging directory 
     inputs:
       command: 'publish'
       publishWebProjects: false
-      projects: '.\src\**\*.csproj'
+      projects: 'src\**\*.csproj'
       arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
   - task: PublishBuildArtifacts@1
+    displayName: Publish Artifacts
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'Fides'
