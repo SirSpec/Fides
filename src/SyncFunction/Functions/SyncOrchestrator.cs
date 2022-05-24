@@ -10,8 +10,8 @@ public class SyncOrchestrator
     [FunctionName(nameof(SyncOrchestrator))]
     public async Task RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context)
     {
-        await context.CallActivityAsync(ImportFunction.Name, "Import");
-        await context.CallActivityAsync(DeleteFunction.Name, "Delete");
+        await context.CallActivityAsync(ImportFunction.Name, default);
+        await context.CallActivityAsync(DeleteFunction.Name, default);
     }
 
     [FunctionName($"{nameof(SyncOrchestrator)}_HttpStart")]

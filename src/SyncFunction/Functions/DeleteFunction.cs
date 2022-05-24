@@ -40,7 +40,7 @@ public class DeleteFunction
     }
 
     [FunctionName(Name)]
-    public async Task Delete([ActivityTrigger] string name, ILogger log)
+    public async Task Delete([ActivityTrigger] object @object, ILogger log)
     {
         var searchResponse = await _elasticClient.SearchAsync<OrderedItem>(searchDescriptor => searchDescriptor.Scroll("10s"));
 

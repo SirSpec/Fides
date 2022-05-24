@@ -37,7 +37,7 @@ public class ImportFunction
     }
 
     [FunctionName(Name)]
-    public async Task Import([ActivityTrigger] string name, ILogger log)
+    public async Task Import([ActivityTrigger] object @object, ILogger log)
     {
         var results = await _orderItemRepository.GetOrdersSortedByBrandAndPriceAync(
             _syncOptions.ImportPageSize,
