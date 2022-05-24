@@ -1,19 +1,33 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- master
-
+  - master
+  
 pool:
-  vmImage: ubuntu-latest
-
+  vmImage: 'windows-latest'
+  
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - task: DotNetCoreCLI@2
+    displayName: Restore Nugets
+    inputs:
+      command: 'restore'
+      feedsToUse: 'select'
+      noCache: true
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: 'build'
+  - task: DotNetCoreCLI@2
+    displayName: Run Unit tests
+    inputs:
+      command: 'test'
+      testRunTitle: 'Fides'
+  - task: DotNetCoreCLI@2
+    displayName: Publish packages
+    inputs:
+      command: 'publish'
+      publishWebProjects: false
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'Fides'
+      publishLocation: 'Container'
+  
