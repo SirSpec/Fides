@@ -32,7 +32,7 @@ steps:
       testRunTitle: 'Fides'
       arguments: '--configuration $(buildConfiguration)'
   - task: DotNetCoreCLI@2
-    displayName: Create and publish packages to staging directory 
+    displayName: Create and publish packages
     inputs:
       command: 'publish'
       publishWebProjects: false
