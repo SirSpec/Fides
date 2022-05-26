@@ -1,5 +1,10 @@
-trigger:
-  - master
-  
 pool:
-  vmImage: 'windows-latest'
+  vmImage: windows-latest
+  
+steps:
+- task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'Subscription'
+    ScriptType: 'FilePath'
+    ScriptPath: 'pipelines\deploy-arm.ps1'
+    azurePowerShellVersion: 'LatestVersion'
