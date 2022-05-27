@@ -4,10 +4,9 @@ pool:
   vmImage: windows-latest
   
 steps:
-- task: DockerCompose@0
+- task: AzurePowerShell@5
   inputs:
-    containerregistrytype: 'Azure Container Registry'
     azureSubscription: 'Subscription'
-    azureContainerRegistry: 'containerregistryfides'
-    dockerComposeFile: '**/docker-compose.yml'
-    action: 'Push services'
+    ScriptType: 'FilePath'
+    ScriptPath: 'pipelines\deploy-arm.ps1'
+    azurePowerShellVersion: 'LatestVersion'
