@@ -33,7 +33,6 @@ public class Startup : FunctionsStartup
         builder.Services.AddMassTransitEndpoints(configuration);
         builder.Services.AddElasticClient(configuration);
 
-        string connectionString = configuration.GetConnectionString("StoresDbContext");
         builder.Services.AddDbContext<StoresDbContext>(options =>
         {
             if (configuration.GetSection("environment").Get<string>() == "Development")
