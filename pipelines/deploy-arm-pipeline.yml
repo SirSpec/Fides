@@ -3,6 +3,7 @@ trigger: none
 pool:
   vmImage: windows-latest
   
+steps:
 - task: DockerCompose@0
   inputs:
     containerregistrytype: 'Azure Container Registry'
