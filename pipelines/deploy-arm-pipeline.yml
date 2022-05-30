@@ -4,12 +4,6 @@ pool:
   vmImage: windows-latest
   
 steps:
-- task: AzurePowerShell@5
-  inputs:
-    azureSubscription: 'Subscription'
-    ScriptType: 'FilePath'
-    ScriptPath: 'pipelines\deploy-arm.ps1'
-    azurePowerShellVersion: 'LatestVersion'
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'Subscription'
