@@ -37,7 +37,9 @@ properties:
   ipAddress:
     type: Public
     ports:
-      - port: 80
+      - port: 1435
+      - port: 15672
+      - port: 5672
     dnsNameLabel: fides-container-group
 tags: {}
 type: Microsoft.ContainerInstance/containerGroups
