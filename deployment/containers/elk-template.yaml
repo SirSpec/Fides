@@ -1,37 +1,8 @@
 apiVersion: '2019-12-01'
 location: germanywestcentral
-name: fides-container-group
+name: fides-elk
 properties:
   containers:
-  - name: sql
-    properties:
-      environmentVariables:
-      - name: MSSQL_SA_PASSWORD
-        secureValue: P@sswor5
-      - name: ACCEPT_EULA
-        value: 1
-      image: mcr.microsoft.com/azure-sql-edge:latest
-      ports:
-      - port: 1435
-      resources:
-        requests:
-          cpu: 1.0
-          memoryInGB: 1.5
-  - name: rabbitmq
-    properties:
-      environmentVariables:
-      - name: RABBITMQ_DEFAULT_USER
-        secureValue: admin
-      - name: RABBITMQ_DEFAULT_PASS
-        secureValue: password
-      image: rabbitmq:management
-      ports:
-      - port: 15672
-      - port: 5672
-      resources:
-        requests:
-          cpu: 1.0
-          memoryInGB: 1.5
   - name: elasticsearch
     properties:
       environmentVariables:
@@ -81,8 +52,7 @@ properties:
   ipAddress:
     type: Public
     ports:
-      - port: 15672
       - port: 5601
-    dnsNameLabel: fides-container-group
+    dnsNameLabel: fides-elk
 tags: {}
 type: Microsoft.ContainerInstance/containerGroups

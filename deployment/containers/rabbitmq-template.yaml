@@ -1,0 +1,30 @@
+apiVersion: '2019-12-01'
+location: germanywestcentral
+name: fides-rabbitmq
+properties:
+  containers:
+  - name: rabbitmq
+    properties:
+      environmentVariables:
+      - name: RABBITMQ_DEFAULT_USER
+        secureValue: admin
+      - name: RABBITMQ_DEFAULT_PASS
+        secureValue: password
+      image: rabbitmq:management
+      ports:
+      - port: 15672
+      - port: 5672
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGB: 1.5
+  osType: Linux
+  restartPolicy: OnFailure
+  ipAddress:
+    type: Public
+    ports:
+      - port: 15672
+      - port: 5601
+    dnsNameLabel: fides-rabbitmq
+tags: {}
+type: Microsoft.ContainerInstance/containerGroups
