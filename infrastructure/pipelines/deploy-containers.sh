@@ -1,14 +1,14 @@
 az acr build --image fides/elasticsearch:v1 \
     --registry containerregistryfides \
-    --file Dockerfile ./infrastructure/containers/elk/elasticsearch
+    --file ./infrastructure/containers/elk/elasticsearch/Dockerfile
 
 az acr build --image fides/kibana:v1 \
     --registry containerregistryfides \
-    --file Dockerfile ./infrastructure/containers/elk/kibana
+    --file ./infrastructure/containers/elk/kibana/Dockerfile
 
 az acr build --image fides/logstash:v1 \
     --registry containerregistryfides \
-    --file Dockerfile ./infrastructure/containers/elk/logstash
+    --file ./infrastructure/containers/elk/logstash/Dockerfile 
 
 # az container create --resource-group Fides --file ./deployment/containers/sql-template.yaml
 # az container create --resource-group Fides --file ./deployment/containers/rabbitmq-template.yaml
