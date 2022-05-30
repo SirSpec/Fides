@@ -2,7 +2,7 @@
 
 echo Create .env
 cat << EOF > .env
-ELASTIC_VERSION=8.2.0
+ELASTIC_VERSION=8.2.2
 EOF
 echo "$(cat .env)"
 
