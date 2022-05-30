@@ -1,5 +1,5 @@
 apiVersion: '2019-12-01'
-location: westeurope
+location: germanywestcentral
 name: fides-container-group
 properties:
   containers:
