@@ -8,17 +8,5 @@ steps:
   inputs:
     azureSubscription: 'Subscription'
     scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az container create --resource-group Fides --file ./deployment/containers/sql-template.yaml'
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Subscription'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az container create --resource-group Fides --file ./deployment/containers/rabbitmq-template.yaml'
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Subscription'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az container create --resource-group Fides --file ./deployment/containers/elk-template.yaml'
+    scriptLocation: 'scriptPath'
+    scriptPath: 'deployment/deploy-infrastructure.sh'

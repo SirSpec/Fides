@@ -24,7 +24,6 @@ properties:
     type: Public
     ports:
       - port: 15672
-      - port: 5601
     dnsNameLabel: fides-rabbitmq
 tags: {}
 type: Microsoft.ContainerInstance/containerGroups
