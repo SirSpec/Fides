@@ -9,4 +9,4 @@ steps:
     azureSubscription: 'Subscription'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
-    inlineScript: 'az container create --resource-group Fides --file deployment\containers\template.yaml'
+    inlineScript: 'az container create --resource-group Fides --file ./deployment/containers/template.yaml'
