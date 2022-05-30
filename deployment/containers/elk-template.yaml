@@ -10,6 +10,8 @@ properties:
         value: -Xms512m -Xmx512m
       - name: ELASTIC_PASSWORD
         secureValue: password
+      - name: discovery.type
+        value: single-node
       image: elasticsearch:8.2.0
       ports:
       - port: 9200
