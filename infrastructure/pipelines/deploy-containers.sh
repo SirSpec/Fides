@@ -1,12 +1,12 @@
-az acr build --image fides/elasticsearch:$(Build.BuildId) \
+az acr build --image fides/elasticsearch:v1 \
     --registry containerregistryfides \
     --file Dockerfile ./deployment/containers/elk/elasticsearch
 
-az acr build --image fides/kibana:$(Build.BuildId) \
+az acr build --image fides/kibana:v1 \
     --registry containerregistryfides \
     --file Dockerfile ./deployment/containers/elk/kibana
 
-az acr build --image fides/logstash:$(Build.BuildId) \
+az acr build --image fides/logstash:v1 \
     --registry containerregistryfides \
     --file Dockerfile ./deployment/containers/elk/logstash
 
