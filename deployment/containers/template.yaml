@@ -60,8 +60,6 @@ properties:
       - port: 9600
       - protocol: tcp
         port: 5000
-      - protocol: udp
-        port: 5000
       resources:
         requests:
           cpu: 1.0
