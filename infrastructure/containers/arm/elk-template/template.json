@@ -1,0 +1,310 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the keyvault that contains the secret."
+            }
+        },
+        "imageSecretName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the secret."
+            }
+        },
+        "elasticSearchSecretName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the secret."
+            }
+        },
+        "kibanaSecretName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the secret."
+            }
+        },
+        "logstashSecretName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the secret."
+            }
+        },
+        "vaultResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the resource group that contains the keyvault."
+            }
+        },
+        "vaultSubscription": {
+            "type": "string",
+            "defaultValue": "[subscription().subscriptionId]",
+            "metadata": {
+                "description": "The name of the subscription that contains the keyvault."
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "dynamicSecret",
+            "properties": {
+                "mode": "Incremental",
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "availabilityZones": {
+                            "type": "array"
+                        },
+                        "location": {
+                            "type": "string"
+                        },
+                        "containerName": {
+                            "type": "string"
+                        },
+                        "osType": {
+                            "type": "string",
+                            "allowedValues": [
+                                "Linux",
+                                "Windows"
+                            ]
+                        },
+                        "restartPolicy": {
+                            "type": "string",
+                            "allowedValues": [
+                                "OnFailure",
+                                "Always",
+                                "Never"
+                            ]
+                        },
+                        "imageRegistryLoginServer": {
+                            "type": "string"
+                        },
+                        "imageUsername": {
+                            "type": "string"
+                        },
+                        "imagePassword": {
+                            "type": "securestring"
+                        },
+                        "elasticSearchPassword": {
+                            "type": "securestring"
+                        },
+                        "kibanaPassword": {
+                            "type": "securestring"
+                        },
+                        "logstashPassword": {
+                            "type": "securestring"
+                        },
+                        "ipAddressType": {
+                            "type": "string"
+                        },
+                        "dnsNameLabel": {
+                            "type": "string"
+                        },
+                        "ports": {
+                            "type": "array"
+                        }
+                    },
+                    "resources": [
+                        {
+                            "location": "[parameters('location')]",
+                            "name": "[parameters('containerName')]",
+                            "type": "Microsoft.ContainerInstance/containerGroups",
+                            "apiVersion": "2021-09-01",
+                            "zones": "[parameters('availabilityZones')]",
+                            "properties": {
+                                "containers": [
+                                    {
+                                        "name": "elasticsearch",
+                                        "properties": {
+                                            "image": "containerregistryfides.azurecr.io/elasticsearch:v1",
+                                            "resources": {
+                                                "requests": {
+                                                    "cpu": 1,
+                                                    "memoryInGB": 8.0
+                                                }
+                                            },
+                                            "ports": [
+                                                {
+                                                    "port": 9200
+                                                },
+                                                {
+                                                    "port": 9300
+                                                }
+                                            ],
+                                            "environmentVariables": [
+                                                {
+                                                    "name": "ES_JAVA_OPTS",
+                                                    "value": "-Xms512m -Xmx512m"
+                                                },
+                                                {
+                                                    "name": "ELASTIC_PASSWORD",
+                                                    "secureValue": "[parameters('elasticSearchPassword')]"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "logstash",
+                                        "properties": {
+                                            "image": "containerregistryfides.azurecr.io/logstash:v1",
+                                            "resources": {
+                                                "requests": {
+                                                    "cpu": 1,
+                                                    "memoryInGB": 1.5
+                                                }
+                                            },
+                                            "ports": [
+                                                {
+                                                    "port": 5044
+                                                },
+                                                {
+                                                    "port": 9600
+                                                },
+                                                {
+                                                    "port": 5000,
+                                                    "protocol": "tcp"
+                                                }
+                                            ],
+                                            "environmentVariables": [
+                                                {
+                                                    "name": "LS_JAVA_OPTS",
+                                                    "value": "-Xms512m -Xmx512m"
+                                                },
+                                                {
+                                                    "name": "LOGSTASH_INTERNAL_PASSWORD",
+                                                    "secureValue": "[parameters('logstashPassword')]"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "kibana",
+                                        "properties": {
+                                            "image": "containerregistryfides.azurecr.io/kibana:v1",
+                                            "resources": {
+                                                "requests": {
+                                                    "cpu": 1,
+                                                    "memoryInGB": 1.5
+                                                }
+                                            },
+                                            "ports": [
+                                                {
+                                                    "port": 5601
+                                                }
+                                            ],
+                                            "environmentVariables": [
+                                                {
+                                                    "name": "KIBANA_SYSTEM_PASSWORD",
+                                                    "secureValue": "[parameters('kibanaPassword')]"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "restartPolicy": "[parameters('restartPolicy')]",
+                                "osType": "[parameters('osType')]",
+                                "imageRegistryCredentials": [
+                                    {
+                                        "server": "[parameters('imageRegistryLoginServer')]",
+                                        "username": "[parameters('imageUsername')]",
+                                        "password": "[parameters('imagePassword')]"
+                                    }
+                                ],
+                                "ipAddress": {
+                                    "dnsNameLabel": "[parameters('dnsNameLabel')]",
+                                    "type": "[parameters('ipAddressType')]",
+                                    "ports": "[parameters('ports')]"
+                                }
+                            },
+                            "tags": {}
+                        }
+                    ]
+                },
+                "parameters": {
+                    "availabilityZones": {
+                        "value": []
+                    },
+                    "containerName": {
+                        "value": "fides-elk"
+                    },
+                    "location": {
+                        "value": "germanywestcentral"
+                    },
+                    "osType": {
+                        "value": "Linux"
+                    },
+                    "restartPolicy": {
+                        "value": "OnFailure"
+                    },
+                    "imageRegistryLoginServer": {
+                        "value": "containerregistryfides.azurecr.io"
+                    },
+                    "imageUsername": {
+                        "value": "containerregistryfides"
+                    },
+                    "imagePassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+                            },
+                            "secretName": "[parameters('imageSecretName')]"
+                        }
+                    },
+                    "elasticSearchPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+                            },
+                            "secretName": "[parameters('elasticSearchSecretName')]"
+                        }
+                    },
+                    "kibanaPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+                            },
+                            "secretName": "[parameters('kibanaSecretName')]"
+                        }
+                    },
+                    "logstashPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+                            },
+                            "secretName": "[parameters('logstashSecretName')]"
+                        }
+                    },
+                    "dnsNameLabel": {
+                        "value": "fides-elk"
+                    },
+                    "ipAddressType": {
+                        "value": "Public"
+                    },
+                    "ports": {
+                        "value": [
+                            {
+                                "port": 5601
+                            },
+                            {
+                                "port": 9200
+                            },
+                            {
+                                "port": 5000
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

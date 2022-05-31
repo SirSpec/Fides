@@ -1,0 +1,186 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the keyvault that contains the secret."
+            }
+        },
+        "secretName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the secret."
+            }
+        },
+        "vaultResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the resource group that contains the keyvault."
+            }
+        },
+        "vaultSubscription": {
+            "type": "string",
+            "defaultValue": "[subscription().subscriptionId]",
+            "metadata": {
+                "description": "The name of the subscription that contains the keyvault."
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "dynamicSecret",
+            "properties": {
+                "mode": "Incremental",
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "availabilityZones": {
+                            "type": "array"
+                        },
+                        "location": {
+                            "type": "string"
+                        },
+                        "containerName": {
+                            "type": "string"
+                        },
+                        "osType": {
+                            "type": "string",
+                            "allowedValues": [
+                                "Linux",
+                                "Windows"
+                            ]
+                        },
+                        "restartPolicy": {
+                            "type": "string",
+                            "allowedValues": [
+                                "OnFailure",
+                                "Always",
+                                "Never"
+                            ]
+                        },
+                        "defaultUser": {
+                            "type": "string"
+                        },
+                        "defaultPassword": {
+                            "type": "securestring"
+                        },
+                        "ipAddressType": {
+                            "type": "string"
+                        },
+                        "dnsNameLabel": {
+                            "type": "string"
+                        },
+                        "ports": {
+                            "type": "array"
+                        }
+                    },
+                    "resources": [
+                        {
+                            "location": "[parameters('location')]",
+                            "name": "[parameters('containerName')]",
+                            "type": "Microsoft.ContainerInstance/containerGroups",
+                            "apiVersion": "2021-09-01",
+                            "zones": "[parameters('availabilityZones')]",
+                            "properties": {
+                                "containers": [
+                                    {
+                                        "name": "rabbitmq",
+                                        "properties": {
+                                            "image": "rabbitmq:management",
+                                            "resources": {
+                                                "requests": {
+                                                    "cpu": 1,
+                                                    "memoryInGB": 1.5
+                                                }
+                                            },
+                                            "ports": [
+                                                {
+                                                    "port": 15672
+                                                },
+                                                {
+                                                    "port": 5672
+                                                }
+                                            ],
+                                            "environmentVariables": [
+                                                {
+                                                    "name": "RABBITMQ_DEFAULT_USER",
+                                                    "value": "[parameters('defaultUser')]"
+                                                },
+                                                {
+                                                    "name": "RABBITMQ_DEFAULT_PASS",
+                                                    "secureValue": "[parameters('defaultPassword')]"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "restartPolicy": "[parameters('restartPolicy')]",
+                                "osType": "[parameters('osType')]",
+                                "ipAddress": {
+                                    "dnsNameLabel": "[parameters('dnsNameLabel')]",
+                                    "type": "[parameters('ipAddressType')]",
+                                    "ports": "[parameters('ports')]"
+                                }
+                            },
+                            "tags": {}
+                        }
+                    ]
+                },
+                "parameters": {
+                    "availabilityZones": {
+                        "value": []
+                    },
+                    "containerName": {
+                        "value": "fides-rabbitmq"
+                    },
+                    "location": {
+                        "value": "germanywestcentral"
+                    },
+                    "osType": {
+                        "value": "Linux"
+                    },
+                    "restartPolicy": {
+                        "value": "OnFailure"
+                    },
+                    "defaultUser": {
+                        "value": "admin"
+                    },
+                    "defaultPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+                            },
+                            "secretName": "[parameters('secretName')]"
+                        }
+                    },
+                    "dnsNameLabel": {
+                        "value": "fides-rabbitmq"
+                    },
+                    "ipAddressType": {
+                        "value": "Public"
+                    },
+                    "ports": {
+                        "value": [
+                            {
+                                "port": 15672
+                            },
+                            {
+                                "port": 5672
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
