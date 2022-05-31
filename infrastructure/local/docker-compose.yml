@@ -26,7 +26,7 @@ services:
         image: "elasticsearch:${ELASTIC_VERSION}"
         restart: on-failure:3
         volumes:
-            - ./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+            - ../containers/elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
             - elasticsearch:/usr/share/elasticsearch/data:z
         ports:
             - "9200:9200"
@@ -42,8 +42,8 @@ services:
         image: "logstash:${ELASTIC_VERSION}"
         restart: on-failure:3
         volumes:
-            - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
-            - ./elk/logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
+            - ../containers/elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+            - ../containers/elk/logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
         ports:
             - "5044:5044"
             - "5001:5000/tcp"
@@ -52,6 +52,7 @@ services:
         environment:
             LS_JAVA_OPTS: -Xms512m -Xmx512m
             LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
+            ELASTICSEARCH_URL: elasticsearch:9200
         networks:
             - elk
         depends_on:
@@ -62,11 +63,12 @@ services:
         image: "kibana:${ELASTIC_VERSION}"
         restart: on-failure:3
         volumes:
-            - ./elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
+            - ../containers/elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
         ports:
             - "5601:5601"
         environment:
             KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+            ELASTICSEARCH_URL: http://elasticsearch:9200
         networks:
             - elk
         depends_on:
