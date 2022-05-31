@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "value": ""
+        },
+        "name": {
+            "value": "sync-function"
+        },
+        "location": {
+            "value": "West Europe"
+        },
+        "hostingPlanName": {
+            "value": "ASP-Fides-8665"
+        },
+        "serverFarmResourceGroup": {
+            "value": "Fides"
+        },
+        "alwaysOn": {
+            "value": false
+        },
+        "ftpsState": {
+            "value": "AllAllowed"
+        },
+        "storageAccountName": {
+            "value": "syncfunction"
+        },
+        "sku": {
+            "value": "Dynamic"
+        },
+        "skuCode": {
+            "value": "Y1"
+        },
+        "workerSize": {
+            "value": "0"
+        },
+        "workerSizeId": {
+            "value": "0"
+        },
+        "numberOfWorkers": {
+            "value": "1"
+        },
+        "use32BitWorkerProcess": {
+            "value": true
+        },
+        "netFrameworkVersion": {
+            "value": "v6.0"
+        }
+    }
+}
