@@ -2,6 +2,8 @@ $resourceGroupName = 'Fides'
 
 $subscription = Get-AzSubscription
 
+New-AzKeyVault -Name "fides-keyvault" -ResourceGroupName $resourceGroupName -Location "germanywestcentral"
+
 New-AzSubscriptionDeployment `
     -Name 'deployResourceGroup' `
     -Location westeurope `
