@@ -1,4 +1,5 @@
 using Azure.Core;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Identity;
 using NLog.Web;
 using SyncConsumers.Consumers;
@@ -37,7 +38,11 @@ IHost host = Host.CreateDefaultBuilder(args)
                             Mode = RetryMode.Exponential
                         }
                     }
-                ));
+                ),
+                new AzureKeyVaultConfigurationOptions
+                {
+                    ReloadInterval = TimeSpan.FromHours(12)
+                });
         }
     })
     .ConfigureLogging((hostBuilderContext, configurationBuilder) =>
