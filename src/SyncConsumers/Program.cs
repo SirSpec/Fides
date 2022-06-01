@@ -1,3 +1,5 @@
+using Azure.Core;
+using Azure.Identity;
 using NLog.Web;
 using SyncConsumers.Consumers;
 using SyncConsumers.Extensions;
@@ -16,6 +18,28 @@ IHost host = Host.CreateDefaultBuilder(args)
         serviceCollection.AddScoped<ImportMessageConsumer>();
         serviceCollection.AddScoped<DeleteMessageConsumer>();
         serviceCollection.AddScoped<IOrderedItemIndexingRepository, OrderedItemIndexingRepository>();
+    })
+    .ConfigureAppConfiguration((hostBuilderContext, configurationBuilder) =>
+    {
+        if (hostBuilderContext.HostingEnvironment.IsProduction())
+        {
+            var builtConfig = configurationBuilder.Build();
+
+            configurationBuilder.AddAzureKeyVault(
+                new Uri(builtConfig.GetConnectionString("KeyVaultUri")),
+                new DefaultAzureCredential(
+                    new DefaultAzureCredentialOptions
+                    {
+                        Retry =
+                        {
+                            Delay= TimeSpan.FromSeconds(2),
+                            MaxDelay = TimeSpan.FromSeconds(30),
+                            MaxRetries = 5,
+                            Mode = RetryMode.Exponential
+                        }
+                    }
+                ));
+        }
     })
     .UseNLog()
     .Build();
