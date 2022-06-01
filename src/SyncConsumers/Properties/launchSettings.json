@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SyncConsumers": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
