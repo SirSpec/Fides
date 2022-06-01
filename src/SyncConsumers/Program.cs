@@ -2,7 +2,6 @@ using Azure.Core;
 using Azure.Identity;
 using NLog.Web;
 using SyncConsumers.Consumers;
-using SyncConsumers.Extensions;
 using SyncConsumers.Options;
 using SyncConsumers.Repositories;
 
@@ -41,7 +40,14 @@ IHost host = Host.CreateDefaultBuilder(args)
                 ));
         }
     })
-    .UseNLog()
+    .ConfigureLogging((hostBuilderContext, configurationBuilder) =>
+    {
+        var fileName = hostBuilderContext.HostingEnvironment.IsProduction()
+            ? "nlog.config"
+            : "nlog.development.config";
+
+        configurationBuilder.AddNLog(fileName);
+    })
     .Build();
 
 await host.RunAsync();
