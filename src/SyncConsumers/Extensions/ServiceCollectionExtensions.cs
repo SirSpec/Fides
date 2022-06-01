@@ -4,7 +4,7 @@ using SharedKernel.Consumers;
 using SyncConsumers.Consumers;
 using SyncConsumers.Options;
 
-namespace SyncConsumers.Extensions;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
