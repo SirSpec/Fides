@@ -12,7 +12,6 @@ public class SyncOptions
     public const int DefaultTimeLimit = 5;
     public const byte DefaultPriorityLimit = 2;
 
-    public int ImportPageSize { get; set; }
     public string? Host { get; set; }
     public string? VirtualHost { get; set; }
     public string? UserName { get; set; }
@@ -27,7 +26,4 @@ public class SyncOptions
     public int? ConcurrencyLimit { get; set; }
     public int? TimeLimit { get; set; }
     public byte? PriorityLimit { get; set; }
-
-    public Uri GetEndpointUri() =>
-        new Uri($"queue:{Endpoint ?? throw new ArgumentNullException($"{nameof(Endpoint)} is null.")}");
 }
