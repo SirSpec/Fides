@@ -1,14 +1,14 @@
 az acr build --image elasticsearch:v1 \
-    --registry containerregistryfides \
-    --file ./infrastructure/containers/elk/elasticsearch/Dockerfile ./infrastructure/containers/elk/elasticsearch/
+  --registry containerregistryfides \
+  --file ./infrastructure/containers/elk/elasticsearch/Dockerfile ./infrastructure/containers/elk/elasticsearch/
 
 az acr build --image kibana:v1 \
-    --registry containerregistryfides \
-    --file ./infrastructure/containers/elk/kibana/Dockerfile ./infrastructure/containers/elk/kibana/
+  --registry containerregistryfides \
+  --file ./infrastructure/containers/elk/kibana/Dockerfile ./infrastructure/containers/elk/kibana/
 
 az acr build --image logstash:v1 \
-    --registry containerregistryfides \
-    --file ./infrastructure/containers/elk/logstash/Dockerfile ./infrastructure/containers/elk/logstash/
+  --registry containerregistryfides \
+  --file ./infrastructure/containers/elk/logstash/Dockerfile ./infrastructure/containers/elk/logstash/
 
 az deployment group create \
   --name deploySQL \
