@@ -181,6 +181,10 @@
                                                 {
                                                     "name": "LOGSTASH_INTERNAL_PASSWORD",
                                                     "secureValue": "[parameters('logstashPassword')]"
+                                                },
+                                                {
+                                                    "name": "ELASTICSEARCH_URL",
+                                                    "value": "fides-elk.germanywestcentral.azurecontainer.io:9200"
                                                 }
                                             ]
                                         }
@@ -204,6 +208,10 @@
                                                 {
                                                     "name": "KIBANA_SYSTEM_PASSWORD",
                                                     "secureValue": "[parameters('kibanaPassword')]"
+                                                },
+                                                {
+                                                    "name": "ELASTICSEARCH_URL",
+                                                    "value": "http://fides-elk.germanywestcentral.azurecontainer.io:9200"
                                                 }
                                             ]
                                         }
