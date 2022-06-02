@@ -264,5 +264,4 @@ __pycache__/
 *.pyc
 
 # Custom
-.env
 **logs/
