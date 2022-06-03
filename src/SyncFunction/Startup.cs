@@ -1,3 +1,6 @@
+using Azure.Core;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Identity;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +25,29 @@ public class Startup : FunctionsStartup
             .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: true, reloadOnChange: false)
             .AddJsonFile(Path.Combine(context.ApplicationRootPath, $"appsettings.{context.EnvironmentName}.json"), optional: true, reloadOnChange: false)
             .AddEnvironmentVariables();
+
+        var builtConfig = builder.ConfigurationBuilder.Build();
+        if (builtConfig.GetSection("environment").Get<string>() == "Production")
+        {
+            builder.ConfigurationBuilder.AddAzureKeyVault(
+                new Uri(builtConfig.GetConnectionString("KeyVaultUri")),
+                new DefaultAzureCredential(
+                    new DefaultAzureCredentialOptions
+                    {
+                        Retry =
+                        {
+                            Delay= TimeSpan.FromSeconds(2),
+                            MaxDelay = TimeSpan.FromSeconds(30),
+                            MaxRetries = 5,
+                            Mode = RetryMode.Exponential
+                        }
+                    }
+                ),
+                new AzureKeyVaultConfigurationOptions
+                {
+                    ReloadInterval = TimeSpan.FromHours(12)
+                });
+        }
     }
 
     public override void Configure(IFunctionsHostBuilder builder)
