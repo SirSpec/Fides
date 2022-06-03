@@ -1,7 +1,5 @@
 $resourceGroupName = 'Fides'
 
-$subscription = Get-AzSubscription
-
 New-AzSubscriptionDeployment `
     -Name 'deployResourceGroup' `
     -Location westeurope `
@@ -21,5 +19,10 @@ New-AzResourceGroupDeployment `
     -Name deployFunction `
     -ResourceGroupName $resourceGroupName `
     -TemplateFile "infrastructure\arm\sync-function\template.json" `
-    -TemplateParameterFile "infrastructure\arm\sync-function\parameters.json" `
-    -subscriptionId $subscription.Id
+    -TemplateParameterFile "infrastructure\arm\sync-function\parameters.json"
+
+New-AzResourceGroupDeployment `
+    -Name deployConsumers `
+    -ResourceGroupName $resourceGroupName `
+    -TemplateFile "infrastructure\arm\sync-consumers\template.json" `
+    -TemplateParameterFile "infrastructure\arm\sync-consumers\parameters.json"
