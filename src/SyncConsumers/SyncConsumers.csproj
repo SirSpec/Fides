@@ -4,7 +4,6 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-SyncFunction-B7B490BA-7104-4DC4-99C1-4CBE5CA3BB8F</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
