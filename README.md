@@ -1,6 +1,6 @@
 # Fides
 
-[![Build Status](https://dev.azure.com/djacho11/Fides/_apis/build/status/SirSpec.Fides?branchName=master)](https://dev.azure.com/djacho11/Fides/_build/latest?definitionId=2&branchName=master)
+[![Build Status](https://dev.azure.com/djacho11/Fides/_apis/build/status/Build%20and%20Test?branchName=master)](https://dev.azure.com/djacho11/Fides/_build/latest?definitionId=2&branchName=master)
 
 A synchronization system to reliably transfer data between two separate data storage services.
 
