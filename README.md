@@ -7,7 +7,6 @@ A synchronization system to reliably transfer data between two separate data sto
 ## Use case and requirements
 - Two separate service that store different data structures
 - Both services provide an API to QUERY, CREATE, UPDATE, DELETE data
-- Host storage sends events such as: CREATE, UPDATE, DELETE
 - Data being transfered in batches
 - Data availability during transfer
 - Data Consistency
@@ -56,6 +55,37 @@ A synchronization system to reliably transfer data between two separate data sto
         PublishingConsumer --> TargetDB
 ```
 
+## Local development
+To setup local environment go to `./infrastructure/local/` directory and:
+```
+docker compose up
+```
+
+It will create and run the following services:
+- SQL
+    - `http://localhost:1435`
+- RabbitMQ
+    - `http://localhost:15672` - Management UI
+    - `http://localhost:5672`
+- Elasticsearch
+    - `http://localhost:9200`
+    - `http://localhost:9300`
+- Logstash
+    - `http://localhost:5044`
+    - TCP: `http://localhost:5001`
+    - UDP: `http://localhost:5000`
+    - `http://localhost:9600`
+- Kibana
+    - `http://localhost:5601`
+- SQLPad
+    - `http://localhost:3000`
+
+Secrets are stored inside `./infrastructure/local/.env`.
+
+If you change content of the `.env` file the following files also has to be changed:
+- `./src/SyncConsumers/appsettings.Development.json`
+- `./src/SyncFunction/appsettings.Development.json`
+
 ## Tech stack
 - [.NET](https://dotnet.microsoft.com/en-us/download)
 - [MassTransit](https://masstransit-project.com)
@@ -64,20 +94,9 @@ A synchronization system to reliably transfer data between two separate data sto
 - [Docker](https://www.docker.com)
 - [MS SQL](https://hub.docker.com/_/microsoft-mssql-server)
 - [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/)
-- [Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/)
+- [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts)
 - [RabbitMQ](https://www.rabbitmq.com)
 - [ELK](https://www.elastic.co/what-is/elk-stack)
-
-## How to run
-Run `setup.sh` to create `.env`:
-```
-sh setup.sh
-```
-
-Create containers:
-```
-docker compose up
-```
 
 ## References
 - [Scheduler Agent Supervisor](https://docs.microsoft.com/en-us/azure/architecture/patterns/scheduler-agent-supervisor)
