@@ -20,9 +20,6 @@ A synchronization system to reliably transfer data between two separate data sto
 - Scheduled jobs
     - Transfer changed data records
     - Clean-up target service from non-existing data records
-- Full reimport mechanism
-- Events handling
-    - Data sync when event occurs
 - Each connection is protected by retry policy
 - Circut breaking when the target service is unavailable
 - Queue-Based Load Leveling
@@ -36,7 +33,6 @@ A synchronization system to reliably transfer data between two separate data sto
         ImportScheduledJobs[Import Scheduled Jobs]
         PublishingConsumer[Publishing Consumer]
         CleanUpScheduledJobs[Clean-up Scheduled Jobs]
-        EventHandlers[Event Handlers]
         MessageMappers[Message Mappers]
 
         subgraph Publishing
@@ -46,8 +42,7 @@ A synchronization system to reliably transfer data between two separate data sto
         CleanUpScheduledJobs --> HostDB
         CleanUpScheduledJobs --> TargetDB & MessageMappers
 
-        HostDB --> EventHandlers
-        EventHandlers & ImportScheduledJobs --> MessageMappers
+        HostDB & ImportScheduledJobs --> MessageMappers
 
         ImportScheduledJobs --> HostDB
         MessageMappers --> Queue
