@@ -90,6 +90,7 @@ If you change content of the `.env` file the following files also has to be chan
 - [MS SQL](https://hub.docker.com/_/microsoft-mssql-server)
 - [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/)
 - [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts)
+- [Microsoft identity platform](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
 - [RabbitMQ](https://www.rabbitmq.com)
 - [ELK](https://www.elastic.co/what-is/elk-stack)
 
