@@ -22,11 +22,11 @@ New-AzKeyVault `
     -Location $Location `
     -EnabledForTemplateDeployment
 
-$servicePrinciple = (Get-AzADServicePrincipal -AppId (Get-AzADApplication -DisplayName $ServicePrincipleName).AppId).Id
+$servicePrincipleId = (Get-AzADServicePrincipal -DisplayNameBeginsWith $ServicePrincipleName).Id
 
 Set-AzKeyVaultAccessPolicy `
     -VaultName $KeyVaultName `
-    -ObjectId $servicePrinciple `
+    -ObjectId $servicePrincipleId `
     -PermissionsToSecrets recover,delete,backup,set,restore,list,get `
     -PermissionsToKeys recover,delete,backup,restore,list,get `
     -PermissionsToCertificates recover,delete,backup,restore,list,get
