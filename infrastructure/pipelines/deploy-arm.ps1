@@ -21,11 +21,9 @@ New-AzKeyVault `
     -Location $Location `
     -EnabledForTemplateDeployment
 
-$servicePrinciple = Get-AzADServicePrincipal -ServicePrincipalName (Get-AzContext).Account
-
 Set-AzKeyVaultAccessPolicy `
     -VaultName $KeyVaultName `
-    -ObjectId $servicePrinciple `
+    -ObjectId (Get-AzADApplication).Id `
     -PermissionsToSecrets recover,delete,backup,set,restore,list,get `
     -PermissionsToKeys recover,delete,backup,restore,list,get `
     -PermissionsToCertificates recover,delete,backup,restore,list,get
