@@ -1,42 +1,60 @@
-$resourceGroupName = 'Fides'
-$keyVaultName = 'fides-keyvault'
-$location = 'westeurope'
+param (
+    $ResourceGroupName,
+    $Location,
+    $KeyVaultName,
+    $DashboardADApplicationName,
+    $RegistryName,
+    $DashboardName,
+    $FunctionName,
+    $ConsumersName)
 
 New-AzSubscriptionDeployment `
     -Name deployResourceGroup `
-    -Location $location `
+    -Location $Location `
     -TemplateFile "infrastructure\arm\resource-group\template.json" `
-    -TemplateParameterFile "infrastructure\arm\resource-group\parameters.json" `
-    -rgName $resourceGroupName
+    -rgName $ResourceGroupName `
+    -rgLocation $Location
 
 New-AzKeyVault `
-    -Name $keyVaultName `
-    -ResourceGroupName $resourceGroupName `
-    -Location $location `
+    -Name $KeyVaultName `
+    -ResourceGroupName $ResourceGroupName `
+    -Location $Location `
     -EnabledForTemplateDeployment
 
 New-AzResourceGroupDeployment `
     -Name deployRegistry `
-    -ResourceGroupName $resourceGroupName `
+    -ResourceGroupName $ResourceGroupName `
     -TemplateFile "infrastructure\arm\registry\template.json" `
-    -TemplateParameterFile "infrastructure\arm\registry\parameters.json"
+    -TemplateParameterFile "infrastructure\arm\registry\parameters.json" `
+    -registryName $RegistryName `
+    -registryLocation $Location
 
-New-AzADApplication -DisplayName Dashboard -AvailableToOtherTenants $false
+New-AzADApplication -DisplayName $DashboardADApplicationName -AvailableToOtherTenants $false
 
 New-AzResourceGroupDeployment `
     -Name deployDashboard `
-    -ResourceGroupName $resourceGroupName `
+    -ResourceGroupName $ResourceGroupName `
     -TemplateFile "infrastructure\arm\dashboard\template.json" `
-    -TemplateParameterFile "infrastructure\arm\dashboard\parameters.json"
+    -TemplateParameterFile "infrastructure\arm\dashboard\parameters.json" `
+    -name $DashboardName `
+    -location $Location `
+    -serverFarmResourceGroup $ResourceGroupName
 
 New-AzResourceGroupDeployment `
     -Name deployFunction `
-    -ResourceGroupName $resourceGroupName `
+    -ResourceGroupName $ResourceGroupName `
     -TemplateFile "infrastructure\arm\sync-function\template.json" `
-    -TemplateParameterFile "infrastructure\arm\sync-function\parameters.json"
+    -TemplateParameterFile "infrastructure\arm\sync-function\parameters.json" `
+    -name $FunctionName `
+    -location $Location `
+    -serverFarmResourceGroup $ResourceGroupName `
+    -storageAccountName "$($FunctionName)storage"
 
 New-AzResourceGroupDeployment `
     -Name deployConsumers `
-    -ResourceGroupName $resourceGroupName `
+    -ResourceGroupName $ResourceGroupName `
     -TemplateFile "infrastructure\arm\sync-consumers\template.json" `
-    -TemplateParameterFile "infrastructure\arm\sync-consumers\parameters.json"
+    -TemplateParameterFile "infrastructure\arm\sync-consumers\parameters.json" `
+    -name $ConsumersName `
+    -location $Location `
+    -serverFarmResourceGroup $ResourceGroupName
