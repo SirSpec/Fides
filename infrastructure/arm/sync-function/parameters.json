@@ -3,25 +3,22 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "name": {
-            "value": "sync-function"
+            "value": ""
         },
         "location": {
-            "value": "West Europe"
+            "value": ""
         },
         "hostingPlanName": {
-            "value": "ASP-Fides-8665"
+            "value": "ASP-Fides-Function-8665"
         },
         "serverFarmResourceGroup": {
-            "value": "Fides"
-        },
-        "alwaysOn": {
-            "value": false
+            "value": ""
         },
         "ftpsState": {
             "value": "AllAllowed"
         },
         "storageAccountName": {
-            "value": "syncfunction"
+            "value": ""
         },
         "sku": {
             "value": "Dynamic"
