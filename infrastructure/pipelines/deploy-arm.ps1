@@ -1,19 +1,33 @@
 $resourceGroupName = 'Fides'
+$keyVaultName = 'fides-keyvault'
+$location = 'westeurope'
 
 New-AzSubscriptionDeployment `
-    -Name 'deployResourceGroup' `
-    -Location westeurope `
+    -Name deployResourceGroup `
+    -Location $location `
     -TemplateFile "infrastructure\arm\resource-group\template.json" `
     -TemplateParameterFile "infrastructure\arm\resource-group\parameters.json" `
-    -rgName $resourceGroupName `
+    -rgName $resourceGroupName
 
-New-AzKeyVault -Name "fides-keyvault" -ResourceGroupName $resourceGroupName -Location "westeurope"
+New-AzKeyVault `
+    -Name $keyVaultName `
+    -ResourceGroupName $resourceGroupName `
+    -Location $location `
+    -EnabledForTemplateDeployment
 
 New-AzResourceGroupDeployment `
     -Name deployRegistry `
     -ResourceGroupName $resourceGroupName `
     -TemplateFile "infrastructure\arm\registry\template.json" `
     -TemplateParameterFile "infrastructure\arm\registry\parameters.json"
+
+New-AzADApplication -DisplayName Dashboard -AvailableToOtherTenants $false
+
+New-AzResourceGroupDeployment `
+    -Name deployDashboard `
+    -ResourceGroupName $resourceGroupName `
+    -TemplateFile "infrastructure\arm\dashboard\template.json" `
+    -TemplateParameterFile "infrastructure\arm\dashboard\parameters.json"
 
 New-AzResourceGroupDeployment `
     -Name deployFunction `
