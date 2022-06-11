@@ -8,35 +8,23 @@
                 "description": "The name of the keyvault that contains the secret."
             }
         },
-        "imageSecretName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name of the secret."
-            }
+        "registryUsernameSecretName": {
+            "type": "string"
+        },
+        "registryPasswordSecretName": {
+            "type": "string"
         },
         "elasticSearchSecretName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name of the secret."
-            }
+            "type": "string"
         },
         "kibanaSecretName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name of the secret."
-            }
+            "type": "string"
         },
         "logstashSecretName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name of the secret."
-            }
+            "type": "string"
         },
         "vaultResourceGroupName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name of the resource group that contains the keyvault."
-            }
+            "type": "string"
         },
         "vaultSubscription": {
             "type": "string",
@@ -44,6 +32,15 @@
             "metadata": {
                 "description": "The name of the subscription that contains the keyvault."
             }
+        },
+        "location": {
+            "type": "string"
+        },
+        "containerName": {
+            "type": "string"
+        },
+        "imageRegistryLoginServer": {
+            "type": "string"
         }
     },
     "resources": [
@@ -87,10 +84,10 @@
                         "imageRegistryLoginServer": {
                             "type": "string"
                         },
-                        "imageUsername": {
+                        "registryUsername": {
                             "type": "string"
                         },
-                        "imagePassword": {
+                        "registryPassword": {
                             "type": "securestring"
                         },
                         "elasticSearchPassword": {
@@ -124,7 +121,7 @@
                                     {
                                         "name": "elasticsearch",
                                         "properties": {
-                                            "image": "containerregistryfides.azurecr.io/elasticsearch:v1",
+                                            "image": "[concat(parameters('imageRegistryLoginServer'), '/elasticsearch:v1')]",
                                             "resources": {
                                                 "requests": {
                                                     "cpu": 1,
@@ -154,7 +151,7 @@
                                     {
                                         "name": "logstash",
                                         "properties": {
-                                            "image": "containerregistryfides.azurecr.io/logstash:v1",
+                                            "image": "[concat(parameters('imageRegistryLoginServer'), '/logstash:v1')]",
                                             "resources": {
                                                 "requests": {
                                                     "cpu": 1,
@@ -192,7 +189,7 @@
                                     {
                                         "name": "kibana",
                                         "properties": {
-                                            "image": "containerregistryfides.azurecr.io/kibana:v1",
+                                            "image": "[concat(parameters('imageRegistryLoginServer'), '/kibana:v1')]",
                                             "resources": {
                                                 "requests": {
                                                     "cpu": 1,
@@ -222,8 +219,8 @@
                                 "imageRegistryCredentials": [
                                     {
                                         "server": "[parameters('imageRegistryLoginServer')]",
-                                        "username": "[parameters('imageUsername')]",
-                                        "password": "[parameters('imagePassword')]"
+                                        "username": "[parameters('registryUsername')]",
+                                        "password": "[parameters('registryPassword')]"
                                     }
                                 ],
                                 "ipAddress": {
@@ -241,10 +238,10 @@
                         "value": []
                     },
                     "containerName": {
-                        "value": "fides-elk"
+                        "value": "[parameters('containerName')]"
                     },
                     "location": {
-                        "value": "germanywestcentral"
+                        "value": "[parameters('location')]"
                     },
                     "osType": {
                         "value": "Linux"
@@ -253,17 +250,22 @@
                         "value": "OnFailure"
                     },
                     "imageRegistryLoginServer": {
-                        "value": "containerregistryfides.azurecr.io"
+                        "value": "[parameters('imageRegistryLoginServer')]"
                     },
-                    "imageUsername": {
-                        "value": "containerregistryfides"
-                    },
-                    "imagePassword": {
+                    "registryUsername": {
                         "reference": {
                             "keyVault": {
                                 "id": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
                             },
-                            "secretName": "[parameters('imageSecretName')]"
+                            "secretName": "[parameters('registryUsernameSecretName')]"
+                        }
+                    },
+                    "registryPassword": {
+                        "reference": {
+                            "keyVault": {
+                                "id": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+                            },
+                            "secretName": "[parameters('registryPasswordSecretName')]"
                         }
                     },
                     "elasticSearchPassword": {
@@ -291,7 +293,7 @@
                         }
                     },
                     "dnsNameLabel": {
-                        "value": "fides-elk"
+                        "value": "[parameters('containerName')]"
                     },
                     "ipAddressType": {
                         "value": "Public"

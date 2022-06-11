@@ -3,9 +3,12 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vaultName": {
-            "value": "fides-keyvault"
+            "value": ""
         },
-        "imageSecretName": {
+        "registryUsernameSecretName": {
+            "value": "RegistryUsername"
+        },
+        "registryPasswordSecretName": {
             "value": "RegistryPassword"
         },
         "elasticSearchSecretName": {
@@ -18,7 +21,16 @@
             "value": "LogstashPassword"
         },
         "vaultResourceGroupName": {
-            "value": "Fides"
+            "value": ""
+        },
+        "location": {
+            "value": ""
+        },
+        "containerName": {
+            "value": ""
+        },
+        "imageRegistryLoginServer": {
+            "value": ""
         }
     }
 }
