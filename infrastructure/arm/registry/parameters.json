@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "registryName": {
-            "value": "containerregistryfides"
+            "value": ""
         },
         "registryLocation": {
-            "value": "westeurope"
+            "value": ""
         },
         "zoneRedundancy": {
             "value": "disabled"
