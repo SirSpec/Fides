@@ -6,7 +6,7 @@
             "type": "string",
             "defaultValue": "[subscription().subscriptionId]"
         },
-        "name": {
+        "resourceName": {
             "type": "string"
         },
         "location": {
@@ -50,25 +50,25 @@
     "resources": [
         {
             "apiVersion": "2018-11-01",
-            "name": "[parameters('name')]",
+            "name": "[parameters('resourceName')]",
             "type": "Microsoft.Web/sites",
             "location": "[parameters('location')]",
             "tags": null,
             "dependsOn": [
-                "[concat('microsoft.insights/components/', parameters('name'), '20220603951')]",
+                "[concat('microsoft.insights/components/', parameters('resourceName'), '20220603951')]",
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
             ],
             "properties": {
-                "name": "[parameters('name')]",
+                "name": "[parameters('resourceName')]",
                 "siteConfig": {
                     "appSettings": [
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference(concat('microsoft.insights/components/', parameters('name'), '20220603951'), '2015-05-01').InstrumentationKey]"
+                            "value": "[reference(concat('microsoft.insights/components/', parameters('resourceName'), '20220603951'), '2015-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference(concat('microsoft.insights/components/', parameters('name'), '20220603951'), '2015-05-01').ConnectionString]"
+                            "value": "[reference(concat('microsoft.insights/components/', parameters('resourceName'), '20220603951'), '2015-05-01').ConnectionString]"
                         },
                         {
                             "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
@@ -116,13 +116,13 @@
         },
         {
             "apiVersion": "2020-02-02-preview",
-            "name": "[concat(parameters('name'), '20220603951')]",
+            "name": "[concat(parameters('resourceName'), '20220603951')]",
             "type": "microsoft.insights/components",
             "location": "[parameters('location')]",
             "tags": null,
             "dependsOn": [],
             "properties": {
-                "ApplicationId": "[parameters('name')]",
+                "ApplicationId": "[parameters('resourceName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
                 "Flow_Type": "Redfield",
                 "Application_Type": "web",

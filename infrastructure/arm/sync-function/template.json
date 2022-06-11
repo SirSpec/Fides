@@ -6,7 +6,7 @@
             "type": "string",
             "defaultValue": "[subscription().subscriptionId]"
         },
-        "name": {
+        "resourceName": {
             "type": "string"
         },
         "location": {
@@ -49,20 +49,20 @@
     "resources": [
         {
             "apiVersion": "2018-11-01",
-            "name": "[parameters('name')]",
+            "name": "[parameters('resourceName')]",
             "type": "Microsoft.Web/sites",
             "kind": "functionapp",
             "location": "[parameters('location')]",
             "tags": {
-                "hidden-link: /app-insights-resource-id": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Insights/components/', parameters('name'))]"
+                "hidden-link: /app-insights-resource-id": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Insights/components/', parameters('resourceName'))]"
             },
             "dependsOn": [
-                "[concat('microsoft.insights/components/', parameters('name'))]",
+                "[concat('microsoft.insights/components/', parameters('resourceName'))]",
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
                 "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
             ],
             "properties": {
-                "name": "[parameters('name')]",
+                "name": "[parameters('resourceName')]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -75,11 +75,11 @@
                         },
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference(concat('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
+                            "value": "[reference(concat('microsoft.insights/components/', parameters('resourceName')), '2015-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference(concat('microsoft.insights/components/', parameters('name')), '2015-05-01').ConnectionString]"
+                            "value": "[reference(concat('microsoft.insights/components/', parameters('resourceName')), '2015-05-01').ConnectionString]"
                         },
                         {
                             "name": "AzureWebJobsStorage",
@@ -91,7 +91,7 @@
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
-                            "value": "[concat(toLower(parameters('name')), 'bfe8')]"
+                            "value": "[concat(toLower(parameters('resourceName')), 'bfe8')]"
                         }
                     ],
                     "cors": {
@@ -130,7 +130,7 @@
         },
         {
             "apiVersion": "2020-02-02-preview",
-            "name": "[parameters('name')]",
+            "name": "[parameters('resourceName')]",
             "type": "microsoft.insights/components",
             "location": "[parameters('location')]",
             "tags": {},
@@ -138,7 +138,7 @@
                 "newWorkspaceTemplate"
             ],
             "properties": {
-                "ApplicationId": "[parameters('name')]",
+                "ApplicationId": "[parameters('resourceName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
                 "Flow_Type": "Redfield",
                 "Application_Type": "web",

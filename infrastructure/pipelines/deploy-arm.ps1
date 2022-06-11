@@ -45,7 +45,7 @@ New-AzResourceGroupDeployment `
     -ResourceGroupName $ResourceGroupName `
     -TemplateFile "infrastructure\arm\dashboard\template.json" `
     -TemplateParameterFile "infrastructure\arm\dashboard\parameters.json" `
-    -name $DashboardName `
+    -resourceName $DashboardName `
     -location $Location `
     -serverFarmResourceGroup $ResourceGroupName
 
@@ -54,7 +54,7 @@ New-AzResourceGroupDeployment `
     -ResourceGroupName $ResourceGroupName `
     -TemplateFile "infrastructure\arm\sync-function\template.json" `
     -TemplateParameterFile "infrastructure\arm\sync-function\parameters.json" `
-    -name $FunctionName `
+    -resourceName $FunctionName `
     -location $Location `
     -serverFarmResourceGroup $ResourceGroupName `
     -storageAccountName "$($FunctionName)storage"
@@ -64,6 +64,6 @@ New-AzResourceGroupDeployment `
     -ResourceGroupName $ResourceGroupName `
     -TemplateFile "infrastructure\arm\sync-consumers\template.json" `
     -TemplateParameterFile "infrastructure\arm\sync-consumers\parameters.json" `
-    -name $ConsumersName `
+    -resourceName $ConsumersName `
     -location $Location `
     -serverFarmResourceGroup $ResourceGroupName
