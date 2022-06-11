@@ -26,6 +26,12 @@
             "metadata": {
                 "description": "The name of the subscription that contains the keyvault."
             }
+        },
+        "location": {
+            "type": "string"
+        },
+        "containerName": {
+            "type": "string"
         }
     },
     "resources": [
@@ -133,10 +139,10 @@
                         "value": []
                     },
                     "containerName": {
-                        "value": "fides-sql"
+                        "value": "[parameters('containerName')]"
                     },
                     "location": {
-                        "value": "germanywestcentral"
+                        "value": "[parameters('location')]"
                     },
                     "osType": {
                         "value": "Linux"
@@ -153,7 +159,7 @@
                         }
                     },
                     "dnsNameLabel": {
-                        "value": "fides-sql"
+                        "value": "[parameters('containerName')]"
                     },
                     "ipAddressType": {
                         "value": "Public"

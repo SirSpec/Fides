@@ -3,13 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vaultName": {
-            "value": "fides-keyvault"
+            "value": ""
         },
         "secretName": {
             "value": "SAPassword"
         },
         "vaultResourceGroupName": {
-            "value": "Fides"
+            "value": ""
+        },
+        "location": {
+            "value": ""
+        },
+        "containerName": {
+            "value": ""
         }
     }
 }
