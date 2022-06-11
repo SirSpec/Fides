@@ -55,7 +55,7 @@
             "location": "[parameters('location')]",
             "tags": {},
             "dependsOn": [
-                "microsoft.insights/components/fides-dashboard",
+                "[concat('microsoft.insights/components/', parameters('name'))]",
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
             ],
             "properties": {
@@ -64,11 +64,11 @@
                     "appSettings": [
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference('microsoft.insights/components/fides-dashboard', '2015-05-01').InstrumentationKey]"
+                            "value": "[reference(concat('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference('microsoft.insights/components/fides-dashboard', '2015-05-01').ConnectionString]"
+                            "value": "[reference(concat('microsoft.insights/components/', parameters('name')), '2015-05-01').ConnectionString]"
                         },
                         {
                             "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
@@ -116,7 +116,7 @@
         },
         {
             "apiVersion": "2020-02-02-preview",
-            "name": "fides-dashboard",
+            "name": "[parameters('name')]",
             "type": "microsoft.insights/components",
             "location": "[parameters('location')]",
             "tags": {},

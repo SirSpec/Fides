@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "name": {
-            "value": "fides-dashboard"
+            "value": ""
         },
         "location": {
-            "value": "West Europe"
+            "value": ""
         },
         "hostingPlanName": {
-            "value": "ASP-Fides-b6ba"
+            "value": "ASP-Fides-Dashboard-b6ba"
         },
         "serverFarmResourceGroup": {
-            "value": "Fides"
+            "value": ""
         },
         "alwaysOn": {
             "value": true
