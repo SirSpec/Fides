@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "name": {
-            "value": "fides-syncconsumers"
+            "value": ""
         },
         "location": {
-            "value": "West Europe"
+            "value": ""
         },
         "hostingPlanName": {
-            "value": "ASP-Fides-ad70"
+            "value": "ASP-Fides-Consumers-ad70"
         },
         "serverFarmResourceGroup": {
-            "value": "Fides"
+            "value": ""
         },
         "alwaysOn": {
             "value": true

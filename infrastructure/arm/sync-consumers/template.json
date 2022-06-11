@@ -1,5 +1,5 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "subscriptionId": {
@@ -55,7 +55,7 @@
             "location": "[parameters('location')]",
             "tags": null,
             "dependsOn": [
-                "microsoft.insights/components/fides-syncconsumers20220603951",
+                "[concat('microsoft.insights/components/', parameters('name'), '20220603951')]",
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
             ],
             "properties": {
@@ -64,11 +64,11 @@
                     "appSettings": [
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference('microsoft.insights/components/fides-syncconsumers20220603951', '2015-05-01').InstrumentationKey]"
+                            "value": "[reference(concat('microsoft.insights/components/', parameters('name'), '20220603951'), '2015-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference('microsoft.insights/components/fides-syncconsumers20220603951', '2015-05-01').ConnectionString]"
+                            "value": "[reference(concat('microsoft.insights/components/', parameters('name'), '20220603951'), '2015-05-01').ConnectionString]"
                         },
                         {
                             "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
@@ -116,9 +116,9 @@
         },
         {
             "apiVersion": "2020-02-02-preview",
-            "name": "fides-syncconsumers20220603951",
+            "name": "[concat(parameters('name'), '20220603951')]",
             "type": "microsoft.insights/components",
-            "location": "westeurope",
+            "location": "[parameters('location')]",
             "tags": null,
             "dependsOn": [],
             "properties": {
