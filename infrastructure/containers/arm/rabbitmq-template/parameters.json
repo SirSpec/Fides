@@ -3,13 +3,22 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vaultName": {
-            "value": "fides-keyvault"
+            "value": ""
         },
-        "secretName": {
-            "value": "RabbitMQPassword"
+        "userSecretName": {
+            "value": "RabbitMqOptions--UserName"
+        },
+        "passwordSecretName": {
+            "value": "RabbitMqOptions--Password"
         },
         "vaultResourceGroupName": {
-            "value": "Fides"
+            "value": ""
+        },
+        "location": {
+            "value": ""
+        },
+        "containerName": {
+            "value": ""
         }
     }
 }

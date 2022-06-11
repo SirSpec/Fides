@@ -8,11 +8,11 @@
                 "description": "The name of the keyvault that contains the secret."
             }
         },
-        "secretName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name of the secret."
-            }
+        "userSecretName": {
+            "type": "string"
+        },
+        "passwordSecretName": {
+            "type": "string"
         },
         "vaultResourceGroupName": {
             "type": "string",
@@ -26,6 +26,12 @@
             "metadata": {
                 "description": "The name of the subscription that contains the keyvault."
             }
+        },
+        "location": {
+            "type": "string"
+        },
+        "containerName": {
+            "type": "string"
         }
     },
     "resources": [
@@ -139,10 +145,10 @@
                         "value": []
                     },
                     "containerName": {
-                        "value": "fides-rabbitmq"
+                        "value": "[parameters('containerName')]"
                     },
                     "location": {
-                        "value": "germanywestcentral"
+                        "value": "[parameters('location')]"
                     },
                     "osType": {
                         "value": "Linux"
@@ -151,18 +157,23 @@
                         "value": "OnFailure"
                     },
                     "defaultUser": {
-                        "value": "admin"
+                        "reference": {
+                            "keyVault": {
+                                "id": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+                            },
+                            "secretName": "[parameters('userSecretName')]"
+                        }
                     },
                     "defaultPassword": {
                         "reference": {
                             "keyVault": {
                                 "id": "[resourceId(parameters('vaultSubscription'), parameters('vaultResourceGroupName'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
                             },
-                            "secretName": "[parameters('secretName')]"
+                            "secretName": "[parameters('passwordSecretName')]"
                         }
                     },
                     "dnsNameLabel": {
-                        "value": "fides-rabbitmq"
+                        "value": "[parameters('containerName')]"
                     },
                     "ipAddressType": {
                         "value": "Public"
