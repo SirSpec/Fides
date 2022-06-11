@@ -1,4 +1,5 @@
 param (
+    $ServicePrincipleName,
     $ResourceGroupName,
     $Location,
     $KeyVaultName,
@@ -21,7 +22,7 @@ New-AzKeyVault `
     -Location $Location `
     -EnabledForTemplateDeployment
 
-$servicePrinciple = (Get-AzADServicePrincipal -AppId (Get-AzADApplication).AppId).Id
+$servicePrinciple = (Get-AzADServicePrincipal -AppId (Get-AzADApplication -DisplayName $ServicePrincipleName).AppId).Id
 
 Set-AzKeyVaultAccessPolicy `
     -VaultName $KeyVaultName `
