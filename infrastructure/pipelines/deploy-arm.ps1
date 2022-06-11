@@ -7,6 +7,7 @@ param (
     $RegistryName,
     $DashboardName,
     $FunctionName,
+    $SyncFunctionStorageAccountName,
     $ConsumersName)
 
 New-AzSubscriptionDeployment `
@@ -58,7 +59,7 @@ New-AzResourceGroupDeployment `
     -resourceName $FunctionName `
     -location $Location `
     -serverFarmResourceGroup $ResourceGroupName `
-    -storageAccountName "$($FunctionName)storage"
+    -storageAccountName $SyncFunctionStorageAccountName
 
 New-AzResourceGroupDeployment `
     -Name deployConsumers `
