@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncFunction", "src\SyncFun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncConsumers", "src\SyncConsumers\SyncConsumers.csproj", "{8CACB6C2-3E69-4D16-9BAA-57CCB94086E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "src\SharedKernel\SharedKernel.csproj", "{27910BEE-5204-417E-BB56-D6CECAB37882}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedKernel", "src\SharedKernel\SharedKernel.csproj", "{27910BEE-5204-417E-BB56-D6CECAB37882}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard", "src\Dashboard\Dashboard.csproj", "{905CDCF3-F791-4F29-AD0D-6400019B2515}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard", "src\Dashboard\Dashboard.csproj", "{315216FD-081B-47A5-B38C-1DB31A25CEC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,18 +35,15 @@ Global
 		{27910BEE-5204-417E-BB56-D6CECAB37882}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27910BEE-5204-417E-BB56-D6CECAB37882}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27910BEE-5204-417E-BB56-D6CECAB37882}.Release|Any CPU.Build.0 = Release|Any CPU
-		{905CDCF3-F791-4F29-AD0D-6400019B2515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{905CDCF3-F791-4F29-AD0D-6400019B2515}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{905CDCF3-F791-4F29-AD0D-6400019B2515}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{905CDCF3-F791-4F29-AD0D-6400019B2515}.Release|Any CPU.Build.0 = Release|Any CPU
+		{315216FD-081B-47A5-B38C-1DB31A25CEC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{315216FD-081B-47A5-B38C-1DB31A25CEC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{315216FD-081B-47A5-B38C-1DB31A25CEC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{315216FD-081B-47A5-B38C-1DB31A25CEC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {082641DF-650A-40DA-978F-1C15DB859E95}
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{905CDCF3-F791-4F29-AD0D-6400019B2515} = {1D5E6EE5-1C2B-4397-8416-509175D50C57}
 	EndGlobalSection
 EndGlobal
