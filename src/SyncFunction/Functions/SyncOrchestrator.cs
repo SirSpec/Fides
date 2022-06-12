@@ -3,7 +3,7 @@ using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
-namespace SyncFunction;
+namespace SyncFunction.Functions;
 
 public class SyncOrchestrator
 {

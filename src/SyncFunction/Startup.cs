@@ -5,6 +5,7 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SyncFunction.Constants;
 using SyncFunction.Extensions;
 using SyncFunction.Options;
 using SyncFunction.QueryObjects.Mappers;
@@ -22,38 +23,24 @@ public class Startup : FunctionsStartup
         var context = builder.GetContext();
 
         builder.ConfigurationBuilder
-            .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: true, reloadOnChange: false)
-            .AddJsonFile(Path.Combine(context.ApplicationRootPath, $"appsettings.{context.EnvironmentName}.json"), optional: true, reloadOnChange: false)
-            .AddEnvironmentVariables();
-
-        var builtConfig = builder.ConfigurationBuilder.Build();
-        if (builtConfig.GetSection("environment").Get<string>() == "Production")
-        {
-            builder.ConfigurationBuilder.AddAzureKeyVault(
-                new Uri(builtConfig.GetConnectionString("KeyVaultUri")),
-                new DefaultAzureCredential(
-                    new DefaultAzureCredentialOptions
-                    {
-                        Retry =
-                        {
-                            Delay= TimeSpan.FromSeconds(2),
-                            MaxDelay = TimeSpan.FromSeconds(30),
-                            MaxRetries = 5,
-                            Mode = RetryMode.Exponential
-                        }
-                    }
-                ),
-                new AzureKeyVaultConfigurationOptions
-                {
-                    ReloadInterval = TimeSpan.FromHours(12)
-                });
-        }
+            .AddJsonFile(
+                Path.Combine(context.ApplicationRootPath, "appsettings.json"),
+                optional: true,
+                reloadOnChange: false)
+            .AddJsonFile(
+                Path.Combine(context.ApplicationRootPath, $"appsettings.{context.EnvironmentName}.json"),
+                optional: true,
+                reloadOnChange: false)
+            .AddEnvironmentVariables()
+            .AddAzureKeyVaultConfiguration();
     }
 
     public override void Configure(IFunctionsHostBuilder builder)
     {
-        builder.Services.AddOptions<SyncOptions>()
-            .Configure<IConfiguration>((settings, configuration) => configuration.GetSection(nameof(SyncOptions)).Bind(settings));
+        builder.Services.AddOptions<RabbitMqOptions>()
+            .Configure<IConfiguration>((settings, configuration) => configuration
+                .GetSection(nameof(RabbitMqOptions))
+                .Bind(settings));
 
         var configuration = builder.GetContext().Configuration;
         builder.Services.AddMassTransitEndpoints(configuration);
@@ -65,7 +52,7 @@ public class Startup : FunctionsStartup
                 options.EnableDetailedErrors().EnableSensitiveDataLogging();
 
             options.UseSqlServer(
-                configuration.GetConnectionString("StoresDbContext"),
+                configuration.GetConnectionString(ConnectionStrings.StoresDbContext),
                 sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
         });
 

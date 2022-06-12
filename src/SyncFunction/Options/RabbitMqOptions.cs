@@ -1,6 +1,6 @@
 namespace SyncFunction.Options;
 
-public class SyncOptions
+public class RabbitMqOptions
 {
     public const int DefaultRetryLimit = 6;
     public const int DefaultMinIntervalInSeconds = 0;

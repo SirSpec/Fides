@@ -10,7 +10,7 @@ using SyncFunction.QueryObjects.Mappers;
 using SyncFunction.QueryObjects.Queries;
 using SyncFunction.Repositories;
 
-namespace SyncFunction;
+namespace SyncFunction.Functions;
 
 public class ImportFunction
 {
@@ -20,27 +20,27 @@ public class ImportFunction
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IOrderItemMapper _orderItemMapper;
     private readonly IPublishEndpoint _publishEndpoint;
-    private readonly SyncOptions _syncOptions;
+    private readonly RabbitMqOptions _rabbitMqOptions;
 
     public ImportFunction(
         ICompletedOrdersQuery completedOrdersQuery,
         IOrderItemRepository orderItemRepository,
         IOrderItemMapper orderItemMapper,
         IPublishEndpoint busControl,
-        IOptions<SyncOptions> syncOptions)
+        IOptions<RabbitMqOptions> rabbitMqOptions)
     {
         _completedOrdersQuery = completedOrdersQuery;
         _orderItemRepository = orderItemRepository;
         _orderItemMapper = orderItemMapper;
         _publishEndpoint = busControl;
-        _syncOptions = syncOptions.Value;
+        _rabbitMqOptions = rabbitMqOptions.Value;
     }
 
     [FunctionName(Name)]
     public async Task Import([ActivityTrigger] object @object, ILogger log)
     {
         var results = await _orderItemRepository.GetOrdersSortedByBrandAndPriceAync(
-            _syncOptions.ImportPageSize,
+            _rabbitMqOptions.ImportPageSize,
             _completedOrdersQuery);
 
         while (results.HasNextPage)

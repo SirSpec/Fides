@@ -6,11 +6,10 @@ using Microsoft.Extensions.Options;
 using Nest;
 using SharedKernel.QueryObjects.Models;
 using SyncFunction.Options;
-using SyncFunction.QueryObjects.Mappers;
 using SyncFunction.QueryObjects.Queries;
 using SyncFunction.Repositories;
 
-namespace SyncFunction;
+namespace SyncFunction.Functions;
 
 public class DeleteFunction
 {
@@ -18,31 +17,26 @@ public class DeleteFunction
 
     private readonly ICompletedOrdersQuery _completedOrdersQuery;
     private readonly IOrderItemRepository _orderItemRepository;
-    private readonly IOrderItemMapper _orderItemMapper;
     private readonly IElasticClient _elasticClient;
-    private readonly IPublishEndpoint _publishEndpoint;
-    private readonly SyncOptions _syncOptions;
+    private readonly ELKOptions _elkOptions;
 
     public DeleteFunction(
         ICompletedOrdersQuery completedOrdersQuery,
         IOrderItemRepository orderItemRepository,
-        IOrderItemMapper orderItemMapper,
         IElasticClient elasticClient,
-        IPublishEndpoint publishEndpoint,
-        IOptions<SyncOptions> syncOptions)
+        IOptions<ELKOptions> elkOptions)
     {
         _completedOrdersQuery = completedOrdersQuery;
         _orderItemRepository = orderItemRepository;
-        _orderItemMapper = orderItemMapper;
         _elasticClient = elasticClient;
-        _publishEndpoint = publishEndpoint;
-        _syncOptions = syncOptions.Value;
+        _elkOptions = elkOptions.Value;
     }
 
     [FunctionName(Name)]
     public async Task Delete([ActivityTrigger] object @object, ILogger log)
     {
-        var searchResponse = await _elasticClient.SearchAsync<OrderedItem>(searchDescriptor => searchDescriptor.Scroll("10s"));
+        var searchResponse = await _elasticClient.SearchAsync<OrderedItem>(
+            searchDescriptor => searchDescriptor.Scroll(_elkOptions.ScrollTime ?? ELKOptions.DefaultScrollTime));
 
         while (searchResponse.Documents.Any())
         {
@@ -61,7 +55,9 @@ public class DeleteFunction
                 await _elasticClient.DeleteManyAsync(documentsToDelete);
             }
 
-            searchResponse = await _elasticClient.ScrollAsync<OrderedItem>("10s", searchResponse.ScrollId);
+            searchResponse = await _elasticClient.ScrollAsync<OrderedItem>(
+                _elkOptions.ScrollTime ?? ELKOptions.DefaultScrollTime,
+                searchResponse.ScrollId);
         }
     }
 }

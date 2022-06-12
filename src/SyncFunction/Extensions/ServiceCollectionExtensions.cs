@@ -1,39 +1,38 @@
 using MassTransit;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Nest;
 using SyncFunction.Options;
 
-namespace SyncFunction.Extensions;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
     public static void AddMassTransitEndpoints(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
-        var syncOptions = configuration
-            .GetSection(nameof(SyncOptions))
-            .Get<SyncOptions>();
+        var rabbitMQOptions = configuration
+            .GetSection(nameof(RabbitMqOptions))
+            .Get<RabbitMqOptions>();
 
         var busControl = Bus.Factory.CreateUsingRabbitMq(rabbitMqBusFactoryConfigurator =>
         {
             rabbitMqBusFactoryConfigurator.Host(
-                syncOptions.Host,
-                syncOptions.VirtualHost,
+                rabbitMQOptions.Host,
+                rabbitMQOptions.VirtualHost,
                 rabbitMqHostConfigurator =>
                 {
-                    rabbitMqHostConfigurator.Username(syncOptions.UserName);
-                    rabbitMqHostConfigurator.Password(syncOptions.Password);
+                    rabbitMqHostConfigurator.Username(rabbitMQOptions.UserName);
+                    rabbitMqHostConfigurator.Password(rabbitMQOptions.Password);
                 });
 
             rabbitMqBusFactoryConfigurator.UseMessageRetry(retryConfigurator =>
                 retryConfigurator.Exponential(
-                    retryLimit: syncOptions.RetryLimit ?? SyncOptions.DefaultRetryLimit,
+                    retryLimit: rabbitMQOptions.RetryLimit ?? RabbitMqOptions.DefaultRetryLimit,
                     minInterval: TimeSpan.FromSeconds(
-                        syncOptions.MinIntervalInSeconds ?? SyncOptions.DefaultMinIntervalInSeconds),
+                        rabbitMQOptions.MinIntervalInSeconds ?? RabbitMqOptions.DefaultMinIntervalInSeconds),
                     maxInterval: TimeSpan.FromSeconds(
-                        syncOptions.MaxIntervalInSeconds ?? SyncOptions.DefaultMaxIntervalInSeconds),
+                        rabbitMQOptions.MaxIntervalInSeconds ?? RabbitMqOptions.DefaultMaxIntervalInSeconds),
                     intervalDelta: TimeSpan.FromSeconds(
-                        syncOptions.IntervalDeltaInSeconds ?? SyncOptions.DefaultIntervalDeltaInSeconds)
+                        rabbitMQOptions.IntervalDeltaInSeconds ?? RabbitMqOptions.DefaultIntervalDeltaInSeconds)
                 ));
         });
 
