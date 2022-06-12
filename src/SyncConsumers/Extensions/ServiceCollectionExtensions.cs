@@ -10,56 +10,56 @@ public static class ServiceCollectionExtensions
 {
     public static void AddMassTransitEndpoints(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
-        var syncOptions = configuration
-            .GetSection(nameof(SyncOptions))
-            .Get<SyncOptions>();
+        var rabbitMQOptions = configuration
+            .GetSection(nameof(RabbitMqOptions))
+            .Get<RabbitMqOptions>();
 
         serviceCollection.AddMassTransit(busRegistrationConfigurator =>
         {
             busRegistrationConfigurator.UsingRabbitMq((busRegistrationContext, rabbitMqBusFactoryConfigurator) =>
             {
-                rabbitMqBusFactoryConfigurator.ReceiveEndpoint(syncOptions.Endpoint!, receiveEndpointConfigurator =>
+                rabbitMqBusFactoryConfigurator.ReceiveEndpoint(rabbitMQOptions.Endpoint!, receiveEndpointConfigurator =>
                 {
-                    receiveEndpointConfigurator.PrefetchCount = syncOptions.PrefetchCount ?? SyncOptions.DefaultPrefetchCount;
-                    receiveEndpointConfigurator.EnablePriority(syncOptions.PriorityLimit ?? SyncOptions.DefaultPriorityLimit);
+                    receiveEndpointConfigurator.PrefetchCount = rabbitMQOptions.PrefetchCount ?? RabbitMqOptions.DefaultPrefetchCount;
+                    receiveEndpointConfigurator.EnablePriority(rabbitMQOptions.PriorityLimit ?? RabbitMqOptions.DefaultPriorityLimit);
 
                     receiveEndpointConfigurator.Batch<ImportMessage>(batchConfigurator =>
                     {
-                        batchConfigurator.MessageLimit = syncOptions.MessageLimit ?? SyncOptions.DefaultMessageLimit;
-                        batchConfigurator.ConcurrencyLimit = syncOptions.ConcurrencyLimit ?? SyncOptions.DefaultConcurrencyLimit;
-                        batchConfigurator.TimeLimit = TimeSpan.FromSeconds(syncOptions.TimeLimit ?? SyncOptions.DefaultTimeLimit);
+                        batchConfigurator.MessageLimit = rabbitMQOptions.MessageLimit ?? RabbitMqOptions.DefaultMessageLimit;
+                        batchConfigurator.ConcurrencyLimit = rabbitMQOptions.ConcurrencyLimit ?? RabbitMqOptions.DefaultConcurrencyLimit;
+                        batchConfigurator.TimeLimit = TimeSpan.FromSeconds(rabbitMQOptions.TimeLimit ?? RabbitMqOptions.DefaultTimeLimit);
 
                         batchConfigurator.Consumer<ImportMessageConsumer, ImportMessage>(serviceCollection.BuildServiceProvider());
                     });
 
                     receiveEndpointConfigurator.Batch<DeleteMessage>(batchConfigurator =>
                     {
-                        batchConfigurator.MessageLimit = syncOptions.MessageLimit ?? SyncOptions.DefaultMessageLimit;
-                        batchConfigurator.ConcurrencyLimit = syncOptions.ConcurrencyLimit ?? SyncOptions.DefaultConcurrencyLimit;
-                        batchConfigurator.TimeLimit = TimeSpan.FromSeconds(syncOptions.TimeLimit ?? SyncOptions.DefaultTimeLimit);
+                        batchConfigurator.MessageLimit = rabbitMQOptions.MessageLimit ?? RabbitMqOptions.DefaultMessageLimit;
+                        batchConfigurator.ConcurrencyLimit = rabbitMQOptions.ConcurrencyLimit ?? RabbitMqOptions.DefaultConcurrencyLimit;
+                        batchConfigurator.TimeLimit = TimeSpan.FromSeconds(rabbitMQOptions.TimeLimit ?? RabbitMqOptions.DefaultTimeLimit);
 
                         batchConfigurator.Consumer<DeleteMessageConsumer, DeleteMessage>(serviceCollection.BuildServiceProvider());
                     });
                 });
 
                 rabbitMqBusFactoryConfigurator.Host(
-                    syncOptions.Host,
-                    syncOptions.VirtualHost,
+                    rabbitMQOptions.Host,
+                    rabbitMQOptions.VirtualHost,
                     rabbitMqHostConfigurator =>
                     {
-                        rabbitMqHostConfigurator.Username(syncOptions.UserName);
-                        rabbitMqHostConfigurator.Password(syncOptions.Password);
+                        rabbitMqHostConfigurator.Username(rabbitMQOptions.UserName);
+                        rabbitMqHostConfigurator.Password(rabbitMQOptions.Password);
                     });
 
                 rabbitMqBusFactoryConfigurator.UseMessageRetry(retryConfigurator =>
                     retryConfigurator.Exponential(
-                        retryLimit: syncOptions.RetryLimit ?? SyncOptions.DefaultRetryLimit,
+                        retryLimit: rabbitMQOptions.RetryLimit ?? RabbitMqOptions.DefaultRetryLimit,
                         minInterval: TimeSpan.FromSeconds(
-                            syncOptions.MinIntervalInSeconds ?? SyncOptions.DefaultMinIntervalInSeconds),
+                            rabbitMQOptions.MinIntervalInSeconds ?? RabbitMqOptions.DefaultMinIntervalInSeconds),
                         maxInterval: TimeSpan.FromSeconds(
-                            syncOptions.MaxIntervalInSeconds ?? SyncOptions.DefaultMaxIntervalInSeconds),
+                            rabbitMQOptions.MaxIntervalInSeconds ?? RabbitMqOptions.DefaultMaxIntervalInSeconds),
                         intervalDelta: TimeSpan.FromSeconds(
-                            syncOptions.IntervalDeltaInSeconds ?? SyncOptions.DefaultIntervalDeltaInSeconds)
+                            rabbitMQOptions.IntervalDeltaInSeconds ?? RabbitMqOptions.DefaultIntervalDeltaInSeconds)
                     ));
 
                 rabbitMqBusFactoryConfigurator.ConfigureEndpoints(busRegistrationContext);

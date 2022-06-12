@@ -1,6 +1,3 @@
-using Azure.Core;
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
-using Azure.Identity;
 using NLog.Web;
 using SyncConsumers.Consumers;
 using SyncConsumers.Options;
@@ -9,8 +6,8 @@ using SyncConsumers.Repositories;
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostBuilderContext, serviceCollection) =>
     {
-        serviceCollection.Configure<SyncOptions>(
-            hostBuilderContext.Configuration.GetSection(nameof(SyncOptions)));
+        serviceCollection.Configure<RabbitMqOptions>(
+            hostBuilderContext.Configuration.GetSection(nameof(RabbitMqOptions)));
 
         serviceCollection.AddMassTransitEndpoints(hostBuilderContext.Configuration);
         serviceCollection.AddElasticClient(hostBuilderContext.Configuration);
@@ -22,28 +19,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostBuilderContext, configurationBuilder) =>
     {
         if (hostBuilderContext.HostingEnvironment.IsProduction())
-        {
-            var builtConfig = configurationBuilder.Build();
-
-            configurationBuilder.AddAzureKeyVault(
-                new Uri(builtConfig.GetConnectionString("KeyVaultUri")),
-                new DefaultAzureCredential(
-                    new DefaultAzureCredentialOptions
-                    {
-                        Retry =
-                        {
-                            Delay= TimeSpan.FromSeconds(2),
-                            MaxDelay = TimeSpan.FromSeconds(30),
-                            MaxRetries = 5,
-                            Mode = RetryMode.Exponential
-                        }
-                    }
-                ),
-                new AzureKeyVaultConfigurationOptions
-                {
-                    ReloadInterval = TimeSpan.FromHours(12)
-                });
-        }
+            configurationBuilder.AddAzureKeyVaultConfiguration();
     })
     .ConfigureLogging((hostBuilderContext, configurationBuilder) =>
     {
