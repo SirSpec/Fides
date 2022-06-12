@@ -4,7 +4,10 @@ using Microsoft.Identity.Web.UI;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-builder.Services.AddMicrosoftIdentityWebAppAuthentication(configuration);
+if (builder.Environment.IsProduction())
+{
+    builder.Services.AddMicrosoftIdentityWebAppAuthentication(configuration);
+}
 
 builder.Services
     .AddControllersWithViews()
@@ -12,7 +15,7 @@ builder.Services
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsProduction())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();

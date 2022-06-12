@@ -1,5 +1,5 @@
 @using Microsoft.Identity.Web
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity?.IsAuthenticated is true)
 {
     <ul class="nav navbar-nav navbar-right">
         <li class="navbar-text">Hello @User.GetDisplayName()!</li>

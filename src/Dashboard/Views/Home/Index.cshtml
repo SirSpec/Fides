@@ -1,11 +1,64 @@
-﻿@{
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment webHostEnvironment 
+@model HomeViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
+<script language="javascript" type="text/javascript">
+    let statusUrl;
+
+    function trigger(url) {
+        statusElement = document.getElementById('status')
+        statusElement.innerHTML = "Triggered"
+
+        fetch(url).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            statusUrl = data.statusQueryGetUri
+            fetch(data.statusQueryGetUri).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                console.log(data);
+                statusElement.innerHTML = data.runtimeStatus
+            }).catch(function(error) {
+                console.log("Connection failed");
+                statusElement.innerHTML = "Failed " + error
+            });
+        }).catch(function(error) {
+            console.log("Connection failed");
+            statusElement.innerHTML = "Failed " + error
+        });
+    }
+
+    function check_status() {
+        statusElement = document.getElementById('status')
+
+        fetch(statusUrl).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            check_status_element = document.getElementById('check_status')
+            statusElement.innerHTML = data.runtimeStatus
+        }).catch(function(error) {
+            console.log("Connection failed");
+            statusElement.innerHTML = "Failed " + error
+        });
+    }
+</script>
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    @foreach (var claim in User.Claims)
+    @if (User.Identity?.IsAuthenticated is true || webHostEnvironment.IsDevelopment())
     {
-        <p><b>@claim.Type:</b> @claim.Value</p>
+        @foreach (var claim in User.Claims)
+        {
+            <p><b>@claim.Type:</b> @claim.Value</p>
+        }
+        <button class="btn btn-primary" onclick="trigger('@Model.SyncOrchestratorHttpStartUrl')">
+            Trigger Sync Function
+        </button>
+        <button class="btn btn-primary" onclick="check_status()">
+            Check Status
+        </button>
+        <p id="status"></p>
     }
 </div>
