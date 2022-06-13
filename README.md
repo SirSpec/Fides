@@ -75,11 +75,40 @@ It will create and run the following services:
 - SQLPad
     - `http://localhost:3000`
 
-Secrets are stored inside `./infrastructure/local/.env`.
+Local secrets are stored inside `./infrastructure/local/.env`.
 
 If you change content of the `.env` file the following files also has to be changed:
 - `./src/SyncConsumers/appsettings.Development.json`
 - `./src/SyncFunction/appsettings.Development.json`
+
+## Azure Key Vault configuration
+Set the following secrets:
+
+### ARM templates
+- RegistryUsername
+- RegistryPassword
+- ElasticSearchPassword
+- KibanaPassword
+- LogstashPassword
+- SAPassword
+
+### Dashboard
+#### Connection strings: 
+- SyncOrchestratorHttpStartUrl
+#### Application settings:
+- AzureAd--Domain
+- AzureAd--ClientId
+- AzureAd--TenantId
+
+### Sync Functions and Consumers
+#### Connection strings:
+- StoresDbContext
+- KeyVaultUri
+#### Application settings:
+- RabbitMqOptions--Host
+- RabbitMqOptions--UserName
+- RabbitMqOptions--Password
+- ELKOptions--ElasticSearchUri
 
 ## Tech stack
 - [.NET](https://dotnet.microsoft.com/en-us/download)
