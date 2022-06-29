@@ -1,12 +1,8 @@
-using Azure.Core;
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
-using Azure.Identity;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SyncFunction.Constants;
-using SyncFunction.Extensions;
 using SyncFunction.Options;
 using SyncFunction.QueryObjects.Mappers;
 using SyncFunction.QueryObjects.Queries;
